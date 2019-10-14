@@ -21,7 +21,7 @@ class DealerTest {
     void testGenerateDeck() {
 		dealer.generateDeck();
 		ArrayList<Card> deck = dealer.getDeck();
-		Iterator deckItr = deck.iterator();
+		Iterator<Card> deckItr = deck.iterator();
 
 		String[] suits = {"Spades", "Diamonds", "Clubs", "Hearts"};
 		for (int i = 0; i < 4; ++i) {
@@ -46,7 +46,7 @@ class DealerTest {
 	}
 
 	@Test
-	void testShuffle() {
+	void testShuffle() { // not a good test: shuffled deck can be the same as generic deck
 		dealer.generateDeck();
 		//ArrayList<Card> deck = dealer.();
 		assertNotEquals(dealer.getDeck(), dealer.shuffleDeck());
