@@ -8,18 +8,20 @@ import java.util.ArrayList;
 class GameLogicTest {
     BaccaratGameLogic gLogic;
 
-    @BeforeAll
-    void setup() {
-        gLogic = new BaccaratGameLogic();
-    }
+//    @BeforeAll
+//    void setup() {
+//        gLogic = new BaccaratGameLogic();
+//    }
 
     @Test
     void testInit() {
+        gLogic = new BaccaratGameLogic();
         assertEquals("BaccaratGameLogic", gLogic.getClass().getName(), "Failed to correctly initialize game logic");
     }
 
     @Test
     void testWhoWonBanker() {
+        gLogic = new BaccaratGameLogic();
         ArrayList<Card> hand1, hand2;
         hand1 = new ArrayList<>();
         hand2 = new ArrayList<>();
@@ -31,6 +33,7 @@ class GameLogicTest {
     }
     @Test
     void testWhoWonPlayer() {
+        gLogic = new BaccaratGameLogic();
         ArrayList<Card> hand1, hand2;
         hand1 = new ArrayList<>();
         hand2 = new ArrayList<>();
@@ -42,6 +45,7 @@ class GameLogicTest {
     }
     @Test
     void testWhoWonTie() {
+        gLogic = new BaccaratGameLogic();
         ArrayList<Card> hand1, hand2;
         hand1 = new ArrayList<>();
         hand2 = new ArrayList<>();
@@ -58,11 +62,12 @@ class GameLogicTest {
 
         @BeforeEach
         void setup() {
+            gLogic = new BaccaratGameLogic();
             hand = new ArrayList<>();
         }
 
         @Test
-        void testLessThanTen() {             
+        void testLessThanTen() {
             hand.add(new Card("Spades", 2));
             hand.add(new Card("Spades", 7));
             assertEquals(9, gLogic.handTotal(hand), "HandTotal returned the wrong value");
@@ -91,6 +96,7 @@ class GameLogicTest {
 
         @BeforeEach
         void setup(){
+            gLogic = new BaccaratGameLogic();
             hand = new ArrayList<>();
         }
 
@@ -192,6 +198,7 @@ class GameLogicTest {
 
         @BeforeEach
         void setup(){
+            gLogic = new BaccaratGameLogic();
             hand = new ArrayList<>();
         }
         @Test

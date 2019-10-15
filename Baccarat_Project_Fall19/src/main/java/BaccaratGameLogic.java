@@ -17,7 +17,11 @@ public class BaccaratGameLogic{
         for (Card c : hand) {
             value += checkFaceValue(c.getValue());
         }
-        return value;
+        //this should work now.
+        if(value > 9)
+            return (value - 10);
+        else
+            return value;
     }
 
     public boolean evaluateBankerDraw(ArrayList<Card>hand, Card playerCard){

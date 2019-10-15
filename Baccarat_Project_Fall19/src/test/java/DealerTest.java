@@ -46,10 +46,15 @@ class DealerTest {
 	}
 
 	@Test
-	void testShuffle() { // not a good test: shuffled deck can be the same as generic deck
+	void testShuffle() { //Better?
 		dealer.generateDeck();
-		//ArrayList<Card> deck = dealer.();
-		assertNotEquals(dealer.getDeck(), dealer.shuffleDeck());
+		ArrayList<Card> deck = dealer.getDeck();
+		assertTrue(deck.equals(dealer.getDeck()), "getDeck() has issues");
+		Boolean OrigDeck = deck.equals(dealer);
+		if (OrigDeck) {
+			dealer.shuffleDeck();
+			assertFalse(deck.equals(dealer), "Did not shuffle the deck");
+		}
 	}
 
 }
