@@ -8,11 +8,6 @@ import java.util.ArrayList;
 class GameLogicTest {
     BaccaratGameLogic gLogic;
 
-//    @BeforeAll
-//    void setup() {
-//        gLogic = new BaccaratGameLogic();
-//    }
-
     @Test
     void testInit() {
         gLogic = new BaccaratGameLogic();
@@ -58,16 +53,10 @@ class GameLogicTest {
 
     @Nested
     class testHandTotal {
-        ArrayList<Card> hand;
-
-        @BeforeEach
-        void setup() {
-            gLogic = new BaccaratGameLogic();
-            hand = new ArrayList<>();
-        }
-
         @Test
         void testLessThanTen() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             hand.add(new Card("Spades", 2));
             hand.add(new Card("Spades", 7));
             assertEquals(9, gLogic.handTotal(hand), "HandTotal returned the wrong value");
@@ -75,6 +64,8 @@ class GameLogicTest {
 
         @Test
         void testEqualTen() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             hand.add(new Card("Spades", 3));
             hand.add(new Card("Spades", 7));
             assertEquals(0, gLogic.handTotal(hand), "HandTotal returned the wrong value");
@@ -83,6 +74,8 @@ class GameLogicTest {
         
         @Test
         void testMoreThanTen() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             hand.add(new Card("Spades", 9));
             hand.add(new Card("Spades", 8));
             assertEquals(7, gLogic.handTotal(hand), "HandTotal returned the wrong value");
@@ -91,17 +84,12 @@ class GameLogicTest {
 
     @Nested
     class testEvaluateBankerDraw {
-        ArrayList<Card> hand;
-        Card playerCard;
-
-        @BeforeEach
-        void setup(){
-            gLogic = new BaccaratGameLogic();
-            hand = new ArrayList<>();
-        }
+        Card playerCard = new Card("Spades", 1);
 
         @Test
         void testZero() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             playerCard.setValue(5);
             hand.add(new Card("Spade", 0));
             hand.add(new Card("Diamond", 0));
@@ -109,6 +97,8 @@ class GameLogicTest {
         }
         @Test
         void testOne(){
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             playerCard.setValue(5);
             hand.add(new Card("Spade", 1));
             hand.add(new Card("Diamond", 0));
@@ -116,6 +106,8 @@ class GameLogicTest {
         }
         @Test
         void testTwo(){
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             playerCard.setValue(5);
             hand.add(new Card("Spade", 1));
             hand.add(new Card("Diamond", 1));
@@ -123,6 +115,8 @@ class GameLogicTest {
         }
         @Test
         void testThreeDrew() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             playerCard.setValue(6);
             hand.add(new Card("Spade", 1));
             hand.add(new Card("Diamond", 2));
@@ -130,6 +124,8 @@ class GameLogicTest {
         }
         @Test
         void testFourDrew() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             playerCard.setValue(6);
             hand.add(new Card("Spade", 2));
             hand.add(new Card("Diamond", 2));
@@ -137,6 +133,8 @@ class GameLogicTest {
         }
         @Test
         void testFiveDrew() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             playerCard.setValue(6);
             hand.add(new Card("Spade", 3));
             hand.add(new Card("Diamond", 2));
@@ -144,27 +142,33 @@ class GameLogicTest {
         }
         @Test
         void testSixDrew() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             playerCard.setValue(6);
             hand.add(new Card("Spade", 3));
             hand.add(new Card("Diamond", 3));
             assertTrue(gLogic.evaluateBankerDraw(hand, playerCard));
         }
         @Test
-        void testFourNDrew() {
-            playerCard.setValue(5);
+        void testFourNoDrew() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             hand.add(new Card("Spade", 2));
             hand.add(new Card("Diamond", 2));
-            assertFalse(gLogic.evaluateBankerDraw(hand, playerCard));
+            assertTrue(gLogic.evaluateBankerDraw(hand, null));
         }
         @Test
-        void testFiveNDrew() {
-            playerCard.setValue(5);
+        void testFiveNoDrew() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             hand.add(new Card("Spade", 3));
             hand.add(new Card("Diamond", 2));
-            assertFalse(gLogic.evaluateBankerDraw(hand, playerCard));
+            assertTrue(gLogic.evaluateBankerDraw(hand, null));
         }
         @Test
         void testSixNDrew() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             playerCard.setValue(5);
             hand.add(new Card("Spade", 3));
             hand.add(new Card("Diamond", 3));
@@ -172,6 +176,8 @@ class GameLogicTest {
         }
         @Test
         void testSeven() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             playerCard.setValue(6);
             hand.add(new Card("Spade", 3));
             hand.add(new Card("Diamond", 4));
@@ -179,6 +185,8 @@ class GameLogicTest {
         }
         @Test
         void testEight() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             playerCard.setValue(6);
             hand.add(new Card("Spade", 4));
             hand.add(new Card("Diamond", 4));
@@ -186,6 +194,8 @@ class GameLogicTest {
         }
         @Test
         void testNine() {
+            gLogic = new BaccaratGameLogic();
+            ArrayList<Card> hand = new ArrayList<>();
             playerCard.setValue(6);
             hand.add(new Card("Spade", 5));
             hand.add(new Card("Diamond", 4));
