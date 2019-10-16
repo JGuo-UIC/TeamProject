@@ -1,7 +1,9 @@
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.sun.prism.paint.ImagePattern;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -13,12 +15,20 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import javax.imageio.ImageIO;
 
 public class BaccaratGame extends Application {
 	ArrayList<Card> playerHand;
@@ -127,9 +137,10 @@ public class BaccaratGame extends Application {
 
 		VBox selection = initLeftVBox();
 		BorderPane game = initRightVBox();
+		selection.setMaxWidth(316.7);
 		pane.setLeft(selection);
 		pane.setCenter(game);
-		pane.setStyle("-fx-background-color: Green;");
+		pane.setStyle("-fx-background-color: DarkGreen;");
 
 		return new Scene(pane, 950, 600);
 	}
@@ -142,18 +153,21 @@ public class BaccaratGame extends Application {
 
 		toggleGrp = new ToggleGroup();
 		// Select Banker
-		BankerButt = new ToggleButton("Bet On Banker");
+		BankerButt = new ToggleButton("Bet Banker");
+		BankerButt.setPrefSize(100, 20);
 		BankerButt.setToggleGroup(toggleGrp);
 		BankerButt.setId("Banker");
 		// Select Player
-		PlayerButt = new ToggleButton("Bet on Player");
+		PlayerButt = new ToggleButton("Bet Player");
+		PlayerButt.setPrefSize(100, 20);
 		PlayerButt.setToggleGroup(toggleGrp);
 		PlayerButt.setId("Player");
 		// Select Tie
-		TieButt = new ToggleButton("Bet On Tie");
+		TieButt = new ToggleButton("Bet Tie");
+		TieButt.setPrefSize(100, 20);
 		TieButt.setToggleGroup(toggleGrp);
 		TieButt.setId("Draw");
-		betChoices = new HBox(BankerButt, PlayerButt, TieButt);
+		betChoices = new HBox(8.5, BankerButt, PlayerButt, TieButt);
 		betChoices.setDisable(true);
 
 		//force the textfield to be Numeric, EX: 1234.56
@@ -193,6 +207,7 @@ public class BaccaratGame extends Application {
 		startBtn.setDisable(true);
 
 		playBtn = new Button("PLAY");
+		playBtn.setPrefSize(150,75);
 		playBtn.setOnAction(e -> {
 			betMoney.setDisable(false);
 			betChoices.setDisable(false);
@@ -288,6 +303,15 @@ public class BaccaratGame extends Application {
 		return playerMsg + bankerMsg + winnerMsg + msg;
 	}
 
+	public CardImages (String suit, int value){
+		Card card1;
+		if(card1.getSuite() == "Hearts"){
+			for(int i = 0; i < card1.getValue(); i++){
+				String file = "resources/" + i "H.png";
+			}
+		}
+
+	}
 
 
 
