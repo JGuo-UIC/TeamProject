@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -26,16 +27,20 @@ public class BaccaratGame extends Application {
 	BaccaratDealer theDealer;
 	BaccaratGameLogic gameLogic;
 
+	String choice = "";
 	double currentBet;
 	double totalWinnings;
 
 	MenuBar menuBar = new MenuBar();
-	Menu mainMenu = new Menu();
-	Scene scene;
-	HashMap<String, Scene> sceneMap;
+	HashMap<String, Scene> sceneMap = new HashMap<String, Scene>();
+	
+	Button playBtn;
 	ToggleButton PlayerButt, BankerButt, TieButt;
+	Button placeBet;
 	EventHandler<ActionEvent> bpdButt;
 	TextField betMoney;
+	
+	TextArea result;
 
 
 	public double evaluateWinnings() {return 0.0;}
@@ -45,20 +50,33 @@ public class BaccaratGame extends Application {
 		launch(args);
 	}
 
-	//feel free to remove the starter code from this method
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-		primaryStage.setTitle("Let's Play Baccarat!!!");
+		primaryStage.setTitle("Let's Play Baccarat!!!");		
+		initMenu();
+		sceneMap.put("scene", mainScene());
+		//sceneMap.put("gameScene", gameBoardScene());
+		primaryStage.setScene(sceneMap.get("scene"));
+		primaryStage.show();
+	}
 
+	// initMenu initializes a menu with two menu items: freshstart and exit, and add into menuBar
+	public void initMenu() {
+		Menu mainMenu = new Menu();
 		mainMenu.setText("Options");
 		MenuItem frshStart = new MenuItem();
 		MenuItem exitItm = new MenuItem();
 
 		frshStart.setText("Fresh Start");
 		frshStart.setOnAction(e -> {
-			primaryStage.setScene(sceneMap.get("scene"));
-			primaryStage.show();
+			placeBet.setDisable(true);
+			PlayerButt.setDisable(true);
+			BankerButt.setDisable(true);
+			TieButt.setDisable(true);
+			playBtn.setDisable(false);
+			currentBet = 0;
+			totalWinnings = 0;
 		});
 
 		exitItm.setText("Exit");
@@ -68,54 +86,108 @@ public class BaccaratGame extends Application {
 
 		mainMenu.getItems().addAll(frshStart, exitItm);
 		menuBar.getMenus().add(mainMenu);
-
-		sceneMap = new HashMap<String, Scene>();
-		betMoney = new TextField();
-
-		//force the textfield to be Numeric, EX: 1234.5
-		betMoney.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if(!newValue.matches("\\d*([\\.]\\d{0,1})?")){
-					betMoney.setText(newValue.replaceAll("\\D", ""));
-				}
-			}
-		});
-		//Adding bet money
-		betMoney.setOnKeyPressed(e-> {if(e.getCode().equals(KeyCode.ENTER)){
-				betMoney.clear();
-			}
-		});
-		/*Temporary
-		VBox vb = new VBox(10, betMoney, BankerButt, PlayerButt, TieButt);
-		scene = new Scene(vb);
-		stage.setScene(scene);
-		*/
-		sceneMap.put("scene", mainScene());
-		primaryStage.setScene(sceneMap.get("scene"));
-		primaryStage.show();
 	}
+
 	public Scene mainScene() {
 		BorderPane pane = new BorderPane();
 		pane.setTop(menuBar);
 		//pane.setPadding(new Insets(70));
-		BankerButt = new ToggleButton();
-		PlayerButt = new ToggleButton();
-		TieButt = new ToggleButton();
-		VBox selection = new VBox(10, betMoney, BankerButt, PlayerButt, TieButt);
+
+		betMoney = new TextField();
+		betMoney.setPromptText("Enter your bid here!");
+
+		//force the textfield to be Numeric, EX: 1234.56
+		betMoney.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if(!newValue.matches("\\d*([\\.]\\d{0,2})?")){
+					betMoney.setText(newValue.replaceAll("\\D", ""));
+				}
+			}
+		});
+
+		// Button to submit player's bet
+		placeBet = new Button("Place Bet");
+		placeBet.setOnAction(e->{
+			currentBet = Integer.parseInt(betMoney.getText());
+		});
+
+		BankerButt = new ToggleButton("Bet On Banker");
+		BankerButt.setId("Banker");
+		PlayerButt = new ToggleButton("Bet on Player");
+		PlayerButt.setId("Player");
+		TieButt = new ToggleButton("Bet On Tie");
+		TieButt.setId("Draw");
+		HBox betChoices = new HBox(BankerButt, PlayerButt, TieButt);
+
+		//After Player, Banker, or Tie butt are pressed
+		bpdButt = new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent pressed){
+				ToggleButton butt = (ToggleButton)pressed.getSource();
+				choice = butt.getId();
+				betChoices.setDisable(true);
+				//primaryStage.setScene(sceneMap.get("gameScene")); //switches to the game scene
+			}
+		};
+
+		BankerButt.setOnAction(bpdButt);
+		PlayerButt.setOnAction(bpdButt);
+		TieButt.setOnAction(bpdButt);
+		betChoices.setDisable(true);
+
+		playBtn = new Button("PLAY");
+		playBtn.setOnAction(e -> {
+			placeBet.setDisable(false);
+			betChoices.setDisable(false);
+			playBtn.setDisable(true);
+		});
+
+		VBox selection = new VBox(10, betMoney, betChoices, playBtn);
 		pane.setLeft(selection);
 		pane.setStyle("-fx-background-color: Green;");
 
 		return new Scene(pane, 950, 600);
 	}
-	//Checks players money, NOT fully implemented
-	boolean playerMoney(int money) {
-		int initMoney = 10000;
-		if(initMoney >= money)
-			return true;
-		else
-			return false;
+
+	public Scene gameBoardScene() {
+		//Temporary Holder
+		BorderPane pane = new BorderPane();
+		return new Scene(pane, 950,600);
 	}
+
+	//Checks players money, NOT fully implemented
+//	boolean playerMoney(int money) {
+//		int initMoney = 10000;
+//		if(initMoney >= money)
+//			return true;
+//		else
+//			return false;
+//	}
+
+	// gameEnd contains the logic for the end of the game
+	private void gameEnd() { // text representation of end results, prefer a popup window
+		result = new TextArea();
+		result.setText(gameEndMsg());
+
+	}
+
+	private String gameEndMsg() {
+		String playerMsg = "Player Total: " + gameLogic.handTotal(playerHand);
+		String bankerMsg = "Banker Total: " + gameLogic.handTotal(bankerHand) + "\n";
+		String winner = gameLogic.whoWon(playerHand, bankerHand);
+		String winnerMsg = winner + "wins!\n";
+		String msg = "";
+		if (choice.equals(winner)) {
+			msg = "Congratuations! You bet " + choice + "! You win!";
+		} else {
+			msg = "Sorry, you bet " + choice + "! You lost your bet!";
+		}
+		return playerMsg + bankerMsg + winnerMsg + msg;
+	}
+
+
+
+
 	/* Optional to implement the Welcome Scene
 		StackPane root = new StackPane();
 
