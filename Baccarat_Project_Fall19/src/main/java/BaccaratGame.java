@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 public class BaccaratGame extends Application {
 	ArrayList<Card> playerHand;
 	ArrayList<Card> bankerHand;
+	ArrayList<Card> deck;
 
 	BaccaratDealer theDealer;
 	BaccaratGameLogic gameLogic;
@@ -30,22 +31,43 @@ public class BaccaratGame extends Application {
 	String choice = "";
 	double currentBet;
 	double totalWinnings;
+	boolean playerWin;
 
 	MenuBar menuBar = new MenuBar();
 	HashMap<String, Scene> sceneMap = new HashMap<String, Scene>();
 
+	// Left VBox
 	TextField betMoney;
-	Button startG;
+	Button startBtn;
 	ToggleButton PlayerButt, BankerButt, TieButt;
 	ToggleGroup toggleGrp;
 	EventHandler<ActionEvent> bpdButt;
 	HBox betChoices;
 	Button playBtn;
+	TextField result = new TextField();
 
-	TextArea result;
+	// Right VBox
+	TextField currWinnings;
+	TextField bankerCard1;
+	TextField bankerCard2;
+	TextField bankerCard3;
+	TextField playerCard1;
+	TextField playerCard2;
+	TextField playerCard3;
 
 
-	public double evaluateWinnings() {return 0.0;}
+	// evaluateWinnings calculate the player's amount of totalWinnings after the end of a game
+	public double evaluateWinnings() {
+		if (playerWin) {
+			if (choice.equals("Player"))
+				totalWinnings += currentBet;
+			 else if (choice.equals("Banker"))
+				totalWinnings += currentBet*1.95;
+			else
+				totalWinnings += currentBet*1.8;
+		}
+		return totalWinnings - currentBet;
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -56,7 +78,11 @@ public class BaccaratGame extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		primaryStage.setTitle("Let's Play Baccarat!!!");		
-		initMenu();
+		initMenu(primaryStage);
+		startGame(primaryStage);
+	}
+
+	private void startGame(Stage primaryStage) {
 		sceneMap.put("scene", mainScene());
 		//sceneMap.put("gameScene", gameBoardScene());
 		primaryStage.setScene(sceneMap.get("scene"));
@@ -64,7 +90,7 @@ public class BaccaratGame extends Application {
 	}
 
 	// initMenu initializes a menu with two menu items: freshstart and exit, and add into menuBar
-	public void initMenu() {
+	public void initMenu(Stage primaryStage) {
 		Menu mainMenu = new Menu();
 		mainMenu.setText("Options");
 		MenuItem frshStart = new MenuItem();
@@ -72,18 +98,8 @@ public class BaccaratGame extends Application {
 
 		frshStart.setText("Fresh Start");
 		frshStart.setOnAction(e -> {
-			// Reset betting
-			betMoney.setText("");
-			currentBet = 0;
-			totalWinnings = 0; // Reset winnings
-			// Reset toggle buttons
-			PlayerButt.setSelected(false);
-			BankerButt.setSelected(false);
-			TieButt.setSelected(false);
-
-			startG.setDisable(true);
-			betChoices.setDisable(true);
-			playBtn.setDisable(false);
+			// Reset game
+			startGame(primaryStage);
 		});
 
 		exitItm.setText("Exit");
@@ -101,7 +117,9 @@ public class BaccaratGame extends Application {
 		//pane.setPadding(new Insets(70));
 
 		VBox selection = initLeftVBox();
+		BorderPane game = initRightVBox();
 		pane.setLeft(selection);
+		pane.setCenter(game);
 		pane.setStyle("-fx-background-color: Green;");
 
 		return new Scene(pane, 950, 600);
@@ -153,24 +171,55 @@ public class BaccaratGame extends Application {
 		TieButt.setOnAction(bpdButt);
 
 		// Button to submit the player's bet and start the game
-		startG = new Button("Start Game!");
-		startG.setOnAction(e->{
+		startBtn = new Button("Start Game!");
+		startBtn.setOnAction(e->{
 			currentBet = Integer.parseInt(betMoney.getText());
 			betMoney.setDisable(true);
 			betChoices.setDisable(true);
-			startG.setDisable(true);
-			startGame();
+			startBtn.setDisable(true);
+			gamePlay();
 		});
-		startG.setDisable(true);
+		startBtn.setDisable(true);
 
 		playBtn = new Button("PLAY");
 		playBtn.setOnAction(e -> {
 			betMoney.setDisable(false);
 			betChoices.setDisable(false);
-			startG.setDisable(false);
+			startBtn.setDisable(false);
 			playBtn.setDisable(true);
 		});
-		return new VBox(10, betMoney, betChoices, startG, playBtn);
+		result.setEditable(false);
+		return new VBox(10, betMoney, betChoices, startBtn, result, playBtn);
+	}
+
+	private BorderPane initRightVBox() {
+		BorderPane board = new BorderPane();
+		Text displayWinnings = new Text("Total Winnings: ");
+		currWinnings = new TextField();
+		currWinnings.setEditable(false);
+		currWinnings.setText(Double.toString(totalWinnings));
+		HBox winningBar  = new HBox(displayWinnings, currWinnings);
+		board.setTop(winningBar);
+
+		bankerCard1 = new TextField();
+		bankerCard1.setEditable(false);
+		bankerCard2 = new TextField();
+		bankerCard2.setEditable(false);
+		bankerCard3 = new TextField();
+		bankerCard3.setEditable(false);
+		HBox bankerPos = new HBox(bankerCard1, bankerCard2, bankerCard3);
+
+		playerCard1 = new TextField();
+		playerCard1.setEditable(false);
+		playerCard2 = new TextField();
+		playerCard2.setEditable(false);
+		playerCard3 = new TextField();
+		playerCard3.setEditable(false);
+		HBox playerPos = new HBox(playerCard1, playerCard2, playerCard3);
+		VBox bankerNPlayer = new VBox(bankerPos, playerPos);
+		board.setCenter(bankerNPlayer);
+
+		return board;
 	}
 
 	public Scene gameBoardScene() {
@@ -179,15 +228,20 @@ public class BaccaratGame extends Application {
 		return new Scene(pane, 950,600);
 	}
 
-	private void startGame() {
+	private void gamePlay() {
+		theDealer.shuffleDeck();
+		playerHand = theDealer.dealHand();
+		bankerHand = theDealer.dealHand();
+		if (!gameLogic.evaluatePlayerDraw(playerHand) && !gameLogic.evaluateBankerDraw(bankerHand, null)) {
+			gameEnd();
+		}
 
 	}
 
 	// gameEnd contains the logic for the end of the game
 	private void gameEnd() { // text representation of end results, prefer a popup window
-		result = new TextArea();
 		result.setText(gameEndMsg());
-
+		evaluateWinnings();
 	}
 
 	private String gameEndMsg() {

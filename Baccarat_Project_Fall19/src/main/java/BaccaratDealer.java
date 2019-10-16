@@ -28,11 +28,10 @@ public class BaccaratDealer {
         return deck.remove(0);
     }
 
-    public ArrayList<Card> shuffleDeck() {
+    public void shuffleDeck() {
         deck.clear();
         generateDeck();
         Collections.shuffle(deck);
-        return deck;
     }
 
     public int deckSize() {
