@@ -60,14 +60,19 @@ public class BaccaratGame extends Application {
 	public double evaluateWinnings() {
 		double resultWinnings = 0.0;
 		if (playerWin) {
-			if (choice.equals("Player"))
+			if (choice.equals("Player")) {
 				resultWinnings = totalWinnings + currentBet;
-			 else if (choice.equals("Banker"))
-				resultWinnings = totalWinnings + currentBet*1.95;
-			else
-				resultWinnings = totalWinnings + currentBet*1.8;
-		} else
+			}
+			 else if (choice.equals("Banker")) {
+				resultWinnings = totalWinnings + currentBet * 1.95;
+			}
+			else {
+				resultWinnings = totalWinnings + currentBet * 1.8;
+			}
+		} else {
 			resultWinnings = totalWinnings - currentBet;
+		}
+		totalWinnings = resultWinnings;
 		return resultWinnings;
 	}
 
@@ -85,6 +90,7 @@ public class BaccaratGame extends Application {
 	}
 
 	private void startGame(Stage primaryStage) {
+		totalWinnings = 0.0;
 		sceneMap.put("scene", mainScene());
 		//sceneMap.put("gameScene", gameBoardScene());
 		primaryStage.setScene(sceneMap.get("scene"));
@@ -256,15 +262,19 @@ public class BaccaratGame extends Application {
 
 	// gameEnd contains the logic for the end of the game
 	private void gameEnd() { // text representation of end results, prefer a popup window
-		result.setText(gameEndMsg());
+		String winner = gameLogic.whoWon(playerHand, bankerHand);
+		result.setText(gameEndMsg(winner));
+		if (winner.equals(choice))
+			playerWin = true;
+		else
+			playerWin = false;
 		currWinnings.setText(Double.toString(evaluateWinnings()));
 		playBtn.setDisable(false);
 	}
 
-	private String gameEndMsg() {
+	private String gameEndMsg(String winner) {
 		String playerMsg = "Player Total: " + gameLogic.handTotal(playerHand);
 		String bankerMsg = "Banker Total: " + gameLogic.handTotal(bankerHand) + "\n";
-		String winner = gameLogic.whoWon(playerHand, bankerHand);
 		String winnerMsg = winner + "wins!\n";
 		String msg = "";
 		if (choice.equals(winner)) {
