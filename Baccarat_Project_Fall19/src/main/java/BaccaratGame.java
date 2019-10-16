@@ -25,8 +25,8 @@ public class BaccaratGame extends Application {
 	ArrayList<Card> bankerHand;
 	ArrayList<Card> deck;
 
-	BaccaratDealer theDealer;
-	BaccaratGameLogic gameLogic;
+	BaccaratDealer theDealer = new BaccaratDealer();
+	BaccaratGameLogic gameLogic = new BaccaratGameLogic();
 
 	String choice = "";
 	double currentBet;
@@ -58,15 +58,17 @@ public class BaccaratGame extends Application {
 
 	// evaluateWinnings calculate the player's amount of totalWinnings after the end of a game
 	public double evaluateWinnings() {
+		double resultWinnings = 0.0;
 		if (playerWin) {
 			if (choice.equals("Player"))
-				totalWinnings += currentBet;
+				resultWinnings = totalWinnings + currentBet;
 			 else if (choice.equals("Banker"))
-				totalWinnings += currentBet*1.95;
+				resultWinnings = totalWinnings + currentBet*1.95;
 			else
-				totalWinnings += currentBet*1.8;
-		}
-		return totalWinnings - currentBet;
+				resultWinnings = totalWinnings + currentBet*1.8;
+		} else
+			resultWinnings = totalWinnings - currentBet;
+		return resultWinnings;
 	}
 
 	public static void main(String[] args) {
@@ -210,11 +212,11 @@ public class BaccaratGame extends Application {
 		HBox bankerPos = new HBox(bankerCard1, bankerCard2, bankerCard3);
 
 		playerCard1 = new TextField();
-		playerCard1.setEditable(false);
+		//playerCard1.setEditable(false);
 		playerCard2 = new TextField();
-		playerCard2.setEditable(false);
+		//playerCard2.setEditable(false);
 		playerCard3 = new TextField();
-		playerCard3.setEditable(false);
+		//playerCard3.setEditable(false);
 		HBox playerPos = new HBox(playerCard1, playerCard2, playerCard3);
 		VBox bankerNPlayer = new VBox(bankerPos, playerPos);
 		board.setCenter(bankerNPlayer);
@@ -230,18 +232,33 @@ public class BaccaratGame extends Application {
 
 	private void gamePlay() {
 		theDealer.shuffleDeck();
-		playerHand = theDealer.dealHand();
-		bankerHand = theDealer.dealHand();
-		if (!gameLogic.evaluatePlayerDraw(playerHand) && !gameLogic.evaluateBankerDraw(bankerHand, null)) {
-			gameEnd();
-		}
 
+		playerHand = theDealer.dealHand();
+		playerCard1.setText(Integer.toString(playerHand.get(0).getValue()));
+		playerCard2.setText(Integer.toString(playerHand.get(1).getValue()));
+
+		bankerHand = theDealer.dealHand();
+		bankerCard1.setText(Integer.toString(bankerHand.get(0).getValue()));
+		bankerCard2.setText(Integer.toString(bankerHand.get(1).getValue()));
+
+		Card player3rdC = null;
+		if (gameLogic.evaluatePlayerDraw(playerHand)) {
+			player3rdC = theDealer.drawOne();
+			playerHand.add(player3rdC);
+			playerCard3.setText(Integer.toString(playerHand.get(2).getValue()));
+		}
+		if (gameLogic.evaluateBankerDraw(bankerHand, player3rdC)) {
+			bankerHand.add(theDealer.drawOne());
+			bankerCard3.setText(Integer.toString(bankerHand.get(2).getValue()));
+		}
+		gameEnd();
 	}
 
 	// gameEnd contains the logic for the end of the game
 	private void gameEnd() { // text representation of end results, prefer a popup window
 		result.setText(gameEndMsg());
-		evaluateWinnings();
+		currWinnings.setText(Double.toString(evaluateWinnings()));
+		playBtn.setDisable(false);
 	}
 
 	private String gameEndMsg() {
