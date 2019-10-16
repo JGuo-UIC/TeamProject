@@ -44,7 +44,7 @@ public class BaccaratGame extends Application {
 	EventHandler<ActionEvent> bpdButt;
 	HBox betChoices;
 	Button playBtn;
-	TextField result = new TextField();
+	TextArea result = new TextArea();
 
 	// Right VBox
 	TextField currWinnings;
@@ -61,13 +61,13 @@ public class BaccaratGame extends Application {
 		double resultWinnings = 0.0;
 		if (playerWin) {
 			if (choice.equals("Player")) {
-				resultWinnings = totalWinnings + currentBet;
+				resultWinnings = totalWinnings + currentBet * 2;
 			}
 			 else if (choice.equals("Banker")) {
 				resultWinnings = totalWinnings + currentBet * 1.95;
 			}
 			else {
-				resultWinnings = totalWinnings + currentBet * 1.8;
+				resultWinnings = totalWinnings + currentBet * 8;
 			}
 		} else {
 			resultWinnings = totalWinnings - currentBet;
@@ -91,6 +91,7 @@ public class BaccaratGame extends Application {
 
 	private void startGame(Stage primaryStage) {
 		totalWinnings = 0.0;
+		result.clear();
 		sceneMap.put("scene", mainScene());
 		//sceneMap.put("gameScene", gameBoardScene());
 		primaryStage.setScene(sceneMap.get("scene"));
@@ -181,11 +182,13 @@ public class BaccaratGame extends Application {
 		// Button to submit the player's bet and start the game
 		startBtn = new Button("Start Game!");
 		startBtn.setOnAction(e->{
-			currentBet = Integer.parseInt(betMoney.getText());
-			betMoney.setDisable(true);
-			betChoices.setDisable(true);
-			startBtn.setDisable(true);
-			gamePlay();
+			if (!betMoney.getText().equals("")) {
+				currentBet = Integer.parseInt(betMoney.getText());
+				betMoney.setDisable(true);
+				betChoices.setDisable(true);
+				startBtn.setDisable(true);
+				gamePlay();
+			}
 		});
 		startBtn.setDisable(true);
 
@@ -218,11 +221,11 @@ public class BaccaratGame extends Application {
 		HBox bankerPos = new HBox(bankerCard1, bankerCard2, bankerCard3);
 
 		playerCard1 = new TextField();
-		//playerCard1.setEditable(false);
+		playerCard1.setEditable(false);
 		playerCard2 = new TextField();
-		//playerCard2.setEditable(false);
+		playerCard2.setEditable(false);
 		playerCard3 = new TextField();
-		//playerCard3.setEditable(false);
+		playerCard3.setEditable(false);
 		HBox playerPos = new HBox(playerCard1, playerCard2, playerCard3);
 		VBox bankerNPlayer = new VBox(bankerPos, playerPos);
 		board.setCenter(bankerNPlayer);
@@ -274,8 +277,8 @@ public class BaccaratGame extends Application {
 
 	private String gameEndMsg(String winner) {
 		String playerMsg = "Player Total: " + gameLogic.handTotal(playerHand);
-		String bankerMsg = "Banker Total: " + gameLogic.handTotal(bankerHand) + "\n";
-		String winnerMsg = winner + "wins!\n";
+		String bankerMsg = " Banker Total: " + gameLogic.handTotal(bankerHand) + "\n";
+		String winnerMsg = winner + " wins!\n";
 		String msg = "";
 		if (choice.equals(winner)) {
 			msg = "Congratuations! You bet " + choice + "! You win!";

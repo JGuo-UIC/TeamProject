@@ -3,6 +3,17 @@ import java.util.ArrayList;
 public class BaccaratGameLogic{
     // hand1 = Player, hand2 = Banker
     public String whoWon(ArrayList<Card> hand1, ArrayList<Card> hand2){
+        int playerTotal = handTotal(hand1);
+        int bankerTotal = handTotal(hand2);
+
+        //check natural winning condition
+        if (hand1.size() == 1 && hand2.size() == 1) {
+            if (playerTotal >= 8 && bankerTotal < 8)
+                return "Player";
+            if (bankerTotal >= 8 && playerTotal < 8)
+                return "Banker";
+        }
+
         if (handTotal(hand1) >= 8 || 
             handTotal(hand1) > handTotal(hand2))
             return "Player";
@@ -28,6 +39,8 @@ public class BaccaratGameLogic{
         int value = handTotal(hand);
         if (value <= 2 || (value <= 5 && playerCard == null))
             return true;
+        else if (playerCard == null)
+            return false;
 
         int pValue = checkFaceValue(playerCard.getValue());        
         if ((value == 3 && pValue != 8) ||
