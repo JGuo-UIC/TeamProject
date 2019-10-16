@@ -33,13 +33,15 @@ public class BaccaratGame extends Application {
 
 	MenuBar menuBar = new MenuBar();
 	HashMap<String, Scene> sceneMap = new HashMap<String, Scene>();
-	
-	Button playBtn;
-	ToggleButton PlayerButt, BankerButt, TieButt;
-	Button placeBet;
-	EventHandler<ActionEvent> bpdButt;
+
 	TextField betMoney;
-	
+	Button startG;
+	ToggleButton PlayerButt, BankerButt, TieButt;
+	ToggleGroup toggleGrp;
+	EventHandler<ActionEvent> bpdButt;
+	HBox betChoices;
+	Button playBtn;
+
 	TextArea result;
 
 
@@ -70,13 +72,18 @@ public class BaccaratGame extends Application {
 
 		frshStart.setText("Fresh Start");
 		frshStart.setOnAction(e -> {
-			placeBet.setDisable(true);
-			PlayerButt.setDisable(true);
-			BankerButt.setDisable(true);
-			TieButt.setDisable(true);
-			playBtn.setDisable(false);
+			// Reset betting
+			betMoney.setText("");
 			currentBet = 0;
-			totalWinnings = 0;
+			totalWinnings = 0; // Reset winnings
+			// Reset toggle buttons
+			PlayerButt.setSelected(false);
+			BankerButt.setSelected(false);
+			TieButt.setSelected(false);
+
+			startG.setDisable(true);
+			betChoices.setDisable(true);
+			playBtn.setDisable(false);
 		});
 
 		exitItm.setText("Exit");
@@ -93,8 +100,34 @@ public class BaccaratGame extends Application {
 		pane.setTop(menuBar);
 		//pane.setPadding(new Insets(70));
 
+		VBox selection = initLeftVBox();
+		pane.setLeft(selection);
+		pane.setStyle("-fx-background-color: Green;");
+
+		return new Scene(pane, 950, 600);
+	}
+
+	private VBox initLeftVBox() {
+		// Textfield for bet
 		betMoney = new TextField();
 		betMoney.setPromptText("Enter your bid here!");
+		betMoney.setDisable(true);
+
+		toggleGrp = new ToggleGroup();
+		// Select Banker
+		BankerButt = new ToggleButton("Bet On Banker");
+		BankerButt.setToggleGroup(toggleGrp);
+		BankerButt.setId("Banker");
+		// Select Player
+		PlayerButt = new ToggleButton("Bet on Player");
+		PlayerButt.setToggleGroup(toggleGrp);
+		PlayerButt.setId("Player");
+		// Select Tie
+		TieButt = new ToggleButton("Bet On Tie");
+		TieButt.setToggleGroup(toggleGrp);
+		TieButt.setId("Draw");
+		betChoices = new HBox(BankerButt, PlayerButt, TieButt);
+		betChoices.setDisable(true);
 
 		//force the textfield to be Numeric, EX: 1234.56
 		betMoney.textProperty().addListener(new ChangeListener<String>() {
@@ -106,26 +139,11 @@ public class BaccaratGame extends Application {
 			}
 		});
 
-		// Button to submit player's bet
-		placeBet = new Button("Place Bet");
-		placeBet.setOnAction(e->{
-			currentBet = Integer.parseInt(betMoney.getText());
-		});
-
-		BankerButt = new ToggleButton("Bet On Banker");
-		BankerButt.setId("Banker");
-		PlayerButt = new ToggleButton("Bet on Player");
-		PlayerButt.setId("Player");
-		TieButt = new ToggleButton("Bet On Tie");
-		TieButt.setId("Draw");
-		HBox betChoices = new HBox(BankerButt, PlayerButt, TieButt);
-
 		//After Player, Banker, or Tie butt are pressed
 		bpdButt = new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent pressed){
 				ToggleButton butt = (ToggleButton)pressed.getSource();
 				choice = butt.getId();
-				betChoices.setDisable(true);
 				//primaryStage.setScene(sceneMap.get("gameScene")); //switches to the game scene
 			}
 		};
@@ -133,20 +151,26 @@ public class BaccaratGame extends Application {
 		BankerButt.setOnAction(bpdButt);
 		PlayerButt.setOnAction(bpdButt);
 		TieButt.setOnAction(bpdButt);
-		betChoices.setDisable(true);
+
+		// Button to submit the player's bet and start the game
+		startG = new Button("Start Game!");
+		startG.setOnAction(e->{
+			currentBet = Integer.parseInt(betMoney.getText());
+			betMoney.setDisable(true);
+			betChoices.setDisable(true);
+			startG.setDisable(true);
+			startGame();
+		});
+		startG.setDisable(true);
 
 		playBtn = new Button("PLAY");
 		playBtn.setOnAction(e -> {
-			placeBet.setDisable(false);
+			betMoney.setDisable(false);
 			betChoices.setDisable(false);
+			startG.setDisable(false);
 			playBtn.setDisable(true);
 		});
-
-		VBox selection = new VBox(10, betMoney, betChoices, playBtn);
-		pane.setLeft(selection);
-		pane.setStyle("-fx-background-color: Green;");
-
-		return new Scene(pane, 950, 600);
+		return new VBox(10, betMoney, betChoices, startG, playBtn);
 	}
 
 	public Scene gameBoardScene() {
@@ -155,14 +179,9 @@ public class BaccaratGame extends Application {
 		return new Scene(pane, 950,600);
 	}
 
-	//Checks players money, NOT fully implemented
-//	boolean playerMoney(int money) {
-//		int initMoney = 10000;
-//		if(initMoney >= money)
-//			return true;
-//		else
-//			return false;
-//	}
+	private void startGame() {
+
+	}
 
 	// gameEnd contains the logic for the end of the game
 	private void gameEnd() { // text representation of end results, prefer a popup window
