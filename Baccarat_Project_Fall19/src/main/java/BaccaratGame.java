@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -10,10 +11,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -31,8 +29,9 @@ public class BaccaratGame extends Application {
 	double currentBet;
 	double totalWinnings;
 
+	MenuBar menuBar = new MenuBar();
+	Menu mainMenu = new Menu();
 	Scene scene;
-	Stage stage;
 	HashMap<String, Scene> sceneMap;
 	ToggleButton PlayerButt, BankerButt, TieButt;
 	EventHandler<ActionEvent> bpdButt;
@@ -50,13 +49,30 @@ public class BaccaratGame extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-		stage.setTitle("Let's Play Baccarat!!!");
+		primaryStage.setTitle("Let's Play Baccarat!!!");
+
+		mainMenu.setText("Options");
+		MenuItem frshStart = new MenuItem();
+		MenuItem exitItm = new MenuItem();
+
+		frshStart.setText("Fresh Start");
+		frshStart.setOnAction(e -> {
+			primaryStage.setScene(sceneMap.get("scene"));
+			primaryStage.show();
+		});
+
+		exitItm.setText("Exit");
+		exitItm.setOnAction(e -> {
+			Platform.exit();
+		});
+
+		mainMenu.getItems().addAll(frshStart, exitItm);
+		menuBar.getMenus().add(mainMenu);
 
 		sceneMap = new HashMap<String, Scene>();
 		betMoney = new TextField();
-		stage = new Stage();
 
-		//force the textfield to be Numeric, EX: 1234.56
+		//force the textfield to be Numeric, EX: 1234.5
 		betMoney.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -76,17 +92,17 @@ public class BaccaratGame extends Application {
 		stage.setScene(scene);
 		*/
 		sceneMap.put("scene", mainScene());
-		stage.setScene(sceneMap.get("scene"));
-		stage.show();
+		primaryStage.setScene(sceneMap.get("scene"));
+		primaryStage.show();
 	}
 	public Scene mainScene() {
 		BorderPane pane = new BorderPane();
+		pane.setTop(menuBar);
 		//pane.setPadding(new Insets(70));
 		BankerButt = new ToggleButton();
 		PlayerButt = new ToggleButton();
 		TieButt = new ToggleButton();
 		VBox selection = new VBox(10, betMoney, BankerButt, PlayerButt, TieButt);
-
 		pane.setLeft(selection);
 		pane.setStyle("-fx-background-color: Green;");
 
