@@ -21,6 +21,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -58,13 +60,18 @@ public class BaccaratGame extends Application {
 
 	// Right VBox
 	TextField currWinnings;
-	TextField bankerCard1;
-	TextField bankerCard2;
-	TextField bankerCard3;
-	TextField playerCard1;
-	TextField playerCard2;
-	TextField playerCard3;
-
+	//	TextField bankerCard1;
+//	TextField bankerCard2;
+//	TextField bankerCard3;
+//	TextField playerCard1;
+//	TextField playerCard2;
+//	TextField playerCard3;
+	ImageView bankerCard1;
+	ImageView bankerCard2;
+	ImageView bankerCard3;
+	ImageView playerCard1;
+	ImageView playerCard2;
+	ImageView playerCard3;
 
 	// evaluateWinnings calculate the player's amount of totalWinnings after the end of a game
 	public double evaluateWinnings() {
@@ -72,11 +79,9 @@ public class BaccaratGame extends Application {
 		if (playerWin) {
 			if (choice.equals("Player")) {
 				resultWinnings = totalWinnings + currentBet * 2;
-			}
-			 else if (choice.equals("Banker")) {
+			} else if (choice.equals("Banker")) {
 				resultWinnings = totalWinnings + currentBet * 1.95;
-			}
-			else {
+			} else {
 				resultWinnings = totalWinnings + currentBet * 8;
 			}
 		} else {
@@ -94,7 +99,7 @@ public class BaccaratGame extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-		primaryStage.setTitle("Let's Play Baccarat!!!");		
+		primaryStage.setTitle("Let's Play Baccarat!!!");
 		initMenu(primaryStage);
 		startGame(primaryStage);
 	}
@@ -174,16 +179,16 @@ public class BaccaratGame extends Application {
 		betMoney.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if(!newValue.matches("\\d*([\\.]\\d{0,2})?")){
+				if (!newValue.matches("\\d*([\\.]\\d{0,2})?")) {
 					betMoney.setText(newValue.replaceAll("\\D", ""));
 				}
 			}
 		});
 
 		//After Player, Banker, or Tie butt are pressed
-		bpdButt = new EventHandler<ActionEvent>(){
-			public void handle(ActionEvent pressed){
-				ToggleButton butt = (ToggleButton)pressed.getSource();
+		bpdButt = new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent pressed) {
+				ToggleButton butt = (ToggleButton) pressed.getSource();
 				choice = butt.getId();
 				//primaryStage.setScene(sceneMap.get("gameScene")); //switches to the game scene
 			}
@@ -195,7 +200,7 @@ public class BaccaratGame extends Application {
 
 		// Button to submit the player's bet and start the game
 		startBtn = new Button("Start Game!");
-		startBtn.setOnAction(e->{
+		startBtn.setOnAction(e -> {
 			if (!betMoney.getText().equals("")) {
 				currentBet = Integer.parseInt(betMoney.getText());
 				betMoney.setDisable(true);
@@ -207,7 +212,7 @@ public class BaccaratGame extends Application {
 		startBtn.setDisable(true);
 
 		playBtn = new Button("PLAY");
-		playBtn.setPrefSize(150,75);
+		playBtn.setPrefSize(150, 75);
 		playBtn.setOnAction(e -> {
 			betMoney.setDisable(false);
 			betChoices.setDisable(false);
@@ -224,23 +229,23 @@ public class BaccaratGame extends Application {
 		currWinnings = new TextField();
 		currWinnings.setEditable(false);
 		currWinnings.setText(Double.toString(totalWinnings));
-		HBox winningBar  = new HBox(displayWinnings, currWinnings);
+		HBox winningBar = new HBox(displayWinnings, currWinnings);
 		board.setTop(winningBar);
 
-		bankerCard1 = new TextField();
-		bankerCard1.setEditable(false);
-		bankerCard2 = new TextField();
-		bankerCard2.setEditable(false);
-		bankerCard3 = new TextField();
-		bankerCard3.setEditable(false);
+//		bankerCard1 = new TextField();
+//		bankerCard1.setEditable(false);
+//		bankerCard2 = new TextField();
+//		bankerCard2.setEditable(false);
+//		bankerCard3 = new TextField();
+//		bankerCard3.setEditable(false);
 		HBox bankerPos = new HBox(bankerCard1, bankerCard2, bankerCard3);
 
-		playerCard1 = new TextField();
-		playerCard1.setEditable(false);
-		playerCard2 = new TextField();
-		playerCard2.setEditable(false);
-		playerCard3 = new TextField();
-		playerCard3.setEditable(false);
+//		playerCard1 = new TextField();
+//		playerCard1.setEditable(false);
+//		playerCard2 = new TextField();
+//		playerCard2.setEditable(false);
+//		playerCard3 = new TextField();
+//		playerCard3.setEditable(false);
 		HBox playerPos = new HBox(playerCard1, playerCard2, playerCard3);
 		VBox bankerNPlayer = new VBox(bankerPos, playerPos);
 		board.setCenter(bankerNPlayer);
@@ -251,29 +256,41 @@ public class BaccaratGame extends Application {
 	public Scene gameBoardScene() {
 		//Temporary Holder
 		BorderPane pane = new BorderPane();
-		return new Scene(pane, 950,600);
+		return new Scene(pane, 950, 600);
 	}
 
 	private void gamePlay() {
 		theDealer.shuffleDeck();
 
 		playerHand = theDealer.dealHand();
-		playerCard1.setText(Integer.toString(playerHand.get(0).getValue()));
-		playerCard2.setText(Integer.toString(playerHand.get(1).getValue()));
+		playerCard1 = new ImageView(CardImage(playerHand.get(0).getSuite(), playerHand.get(0).getValue()));
+		playerCard2 = new ImageView(CardImage(playerHand.get(1).getSuite(), playerHand.get(1).getValue()));
 
 		bankerHand = theDealer.dealHand();
-		bankerCard1.setText(Integer.toString(bankerHand.get(0).getValue()));
-		bankerCard2.setText(Integer.toString(bankerHand.get(1).getValue()));
+		bankerCard1 = new ImageView(CardImage(bankerHand.get(0).getSuite(), bankerHand.get(0).getValue()));
+		bankerCard2 = new ImageView(CardImage(bankerHand.get(1).getSuite(), bankerHand.get(1).getValue()));
+
+//		theDealer.shuffleDeck();
+//
+//		playerHand = theDealer.dealHand();
+//		playerCard1.setText(Integer.toString(playerHand.get(0).getValue()));
+//		playerCard2.setText(Integer.toString(playerHand.get(1).getValue()));
+//
+//		bankerHand = theDealer.dealHand();
+//		bankerCard1.setText(Integer.toString(bankerHand.get(0).getValue()));
+//		bankerCard2.setText(Integer.toString(bankerHand.get(1).getValue()));
 
 		Card player3rdC = null;
 		if (gameLogic.evaluatePlayerDraw(playerHand)) {
 			player3rdC = theDealer.drawOne();
 			playerHand.add(player3rdC);
-			playerCard3.setText(Integer.toString(playerHand.get(2).getValue()));
+			playerCard3 = new ImageView(CardImage(playerHand.get(2).getSuite(), playerHand.get(2).getValue()));
+			//playerCard3.setText(Integer.toString(playerHand.get(2).getValue()));
 		}
 		if (gameLogic.evaluateBankerDraw(bankerHand, player3rdC)) {
 			bankerHand.add(theDealer.drawOne());
-			bankerCard3.setText(Integer.toString(bankerHand.get(2).getValue()));
+			bankerCard3 = new ImageView(CardImage(bankerHand.get(2).getSuite(), bankerHand.get(2).getValue()));
+			//bankerCard3.setText(Integer.toString(bankerHand.get(2).getValue()));
 		}
 		gameEnd();
 	}
@@ -303,16 +320,17 @@ public class BaccaratGame extends Application {
 		return playerMsg + bankerMsg + winnerMsg + msg;
 	}
 
-	public CardImages (String suit, int value){
-		Card card1;
-		if(card1.getSuite() == "Hearts"){
-			for(int i = 0; i < card1.getValue(); i++){
-				String file = "resources/" + i "H.png";
-			}
+	private Image CardImage(String suite, int value) {
+		if (suite == "Hearts") {
+			return (new Image(getClass().getResource("resources/" + value + "H.png").toExternalForm()));
+		}else if (suite == "Diamonds") {
+			return (new Image(getClass().getResource("resources/" + value + "D.png").toExternalForm()));
+		}else if (suite == "Spades") {
+			return (new Image(getClass().getResource("resources/" + value + "S.png").toExternalForm()));
+		}else{
+			return (new Image(getClass().getResource("resources/" + value + "C.png").toExternalForm()));
 		}
-
-	}
-
+}
 
 
 	/* Optional to implement the Welcome Scene
