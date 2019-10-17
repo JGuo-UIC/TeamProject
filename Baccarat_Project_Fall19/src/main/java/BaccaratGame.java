@@ -238,7 +238,19 @@ public class BaccaratGame extends Application {
 //		bankerCard2.setEditable(false);
 //		bankerCard3 = new TextField();
 //		bankerCard3.setEditable(false);
-		HBox bankerPos = new HBox(bankerCard1, bankerCard2, bankerCard3);
+
+//        bankerCard1 = new ImageView();
+//        bankerCard2 = new ImageView();
+//        bankerCard3 = new ImageView();
+
+        GridPane imagePane = new GridPane();
+        imagePane.add(playerCard1, 0,0);
+        imagePane.add(playerCard2,0,1);
+        imagePane.add(playerCard3,0,2);
+        imagePane.add(bankerCard1,1,0);
+        imagePane.add(bankerCard2,1,1);
+        imagePane.add(bankerCard3,1,2);
+		//HBox bankerPos = new HBox(bankerCard1, bankerCard2, bankerCard3);
 
 //		playerCard1 = new TextField();
 //		playerCard1.setEditable(false);
@@ -246,8 +258,13 @@ public class BaccaratGame extends Application {
 //		playerCard2.setEditable(false);
 //		playerCard3 = new TextField();
 //		playerCard3.setEditable(false);
-		HBox playerPos = new HBox(playerCard1, playerCard2, playerCard3);
-		VBox bankerNPlayer = new VBox(bankerPos, playerPos);
+
+//        playerCard1 = new ImageView();
+//        playerCard2 = new ImageView();
+//        playerCard3 = new ImageView();
+
+		//HBox playerPos = new HBox(playerCard1, playerCard2, playerCard3);
+		VBox bankerNPlayer = new VBox(imagePane); //(bankerPos, playerPos);
 		board.setCenter(bankerNPlayer);
 
 		return board;
@@ -322,18 +339,19 @@ public class BaccaratGame extends Application {
 
 	private Image CardImage(String suite, int value) {
 		if (suite == "Hearts") {
-			return (new Image(getClass().getResource("resources/" + value + "H.png").toExternalForm()));
+			return (new Image(value + "H.png"));
 		}else if (suite == "Diamonds") {
-			return (new Image(getClass().getResource("resources/" + value + "D.png").toExternalForm()));
+			return (new Image(value + "D.png"));
 		}else if (suite == "Spades") {
-			return (new Image(getClass().getResource("resources/" + value + "S.png").toExternalForm()));
+			return (new Image(value + "S.png"));
 		}else{
-			return (new Image(getClass().getResource("resources/" + value + "C.png").toExternalForm()));
+			return (new Image("resources/" + value + "C.png"));
 		}
 }
 
-
-	/* Optional to implement the Welcome Scene
+//	return (new Image(getClass().getResource("resources/" + value + "C.png").toExternalForm()));
+//  return (new Image(getClass().getResource(value + "H.png").toExternalForm()));
+    /* Optional to implement the Welcome Scene
 		StackPane root = new StackPane();
 
 		//Welcome Scene
