@@ -21,6 +21,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -138,23 +140,35 @@ public class BaccaratGame extends Application {
 	public Scene mainScene() {
 		BorderPane pane = new BorderPane();
 		pane.setTop(menuBar);
-		//pane.setPadding(new Insets(70));
 
 		VBox selection = initLeftVBox();
 		BorderPane game = initRightVBox();
-		selection.setMaxWidth(316.7);
 		pane.setLeft(selection);
 		pane.setCenter(game);
-		pane.setStyle("-fx-background-color: DarkGreen;");
+		pane.setStyle("-fx-background-color: #43a047;");
 
 		return new Scene(pane, 950, 600);
 	}
 
 	private VBox initLeftVBox() {
+		ImageView logo = new ImageView(new Image("logo.png"));
+		logo.setFitWidth(255);
+		logo.setPreserveRatio(true);
+
+		DropShadow dropShadow = new DropShadow();
+		dropShadow.setBlurType(BlurType.GAUSSIAN);
+		dropShadow.setRadius(5);
+
+		Text dollar = new Text("$");
+		dollar.setStyle("-fx-font-size: 20;");
 		// Textfield for bet
 		betMoney = new TextField();
 		betMoney.setPromptText("Enter your bid here!");
 		betMoney.setDisable(true);
+		dollar.setTextAlignment(TextAlignment.CENTER);
+		HBox betRow = new HBox(dollar, betMoney);
+		HBox.setMargin(dollar, new Insets(5));
+		betRow.setAlignment(Pos.CENTER);
 
 		toggleGrp = new ToggleGroup();
 		// Select Banker
@@ -162,16 +176,22 @@ public class BaccaratGame extends Application {
 		BankerButt.setPrefSize(100, 20);
 		BankerButt.setToggleGroup(toggleGrp);
 		BankerButt.setId("Banker");
+		BankerButt.setEffect(dropShadow);
+		BankerButt.setStyle("-fx-background-radius:15em;");
 		// Select Player
 		PlayerButt = new ToggleButton("Bet Player");
 		PlayerButt.setPrefSize(100, 20);
 		PlayerButt.setToggleGroup(toggleGrp);
 		PlayerButt.setId("Player");
+		PlayerButt.setEffect(dropShadow);
+		PlayerButt.setStyle("-fx-background-radius:15em;");
 		// Select Tie
 		TieButt = new ToggleButton("Bet Tie");
 		TieButt.setPrefSize(100, 20);
 		TieButt.setToggleGroup(toggleGrp);
 		TieButt.setId("Draw");
+		TieButt.setEffect(dropShadow);
+		TieButt.setStyle("-fx-background-radius:15em;");
 		betChoices = new HBox(8.5, BankerButt, PlayerButt, TieButt);
 		betChoices.setDisable(true);
 
@@ -199,7 +219,7 @@ public class BaccaratGame extends Application {
 		TieButt.setOnAction(bpdButt);
 
 		// Button to submit the player's bet and start the game
-		startBtn = new Button("Start Game!");
+		startBtn = new Button("Confirm Bet");
 		startBtn.setOnAction(e -> {
 			if (!betMoney.getText().equals("")) {
 				currentBet = Integer.parseInt(betMoney.getText());
@@ -209,18 +229,39 @@ public class BaccaratGame extends Application {
 				gamePlay();
 			}
 		});
+		startBtn.setEffect(dropShadow);
+		startBtn.setStyle("-fx-background-radius:15em;");
 		startBtn.setDisable(true);
+		HBox startHBox = new HBox(startBtn);
+		startHBox.setAlignment(Pos.CENTER_RIGHT);
 
 		playBtn = new Button("PLAY");
-		playBtn.setPrefSize(150, 75);
+		playBtn.setStyle("-fx-font-size: 40px;");
+		playBtn.setPrefSize(296.7, 75);
 		playBtn.setOnAction(e -> {
 			betMoney.setDisable(false);
 			betChoices.setDisable(false);
 			startBtn.setDisable(false);
 			playBtn.setDisable(true);
 		});
+		playBtn.setEffect(dropShadow);
+		HBox playHBox = new HBox(playBtn);
+		playHBox.setAlignment(Pos.BOTTOM_CENTER);
+
 		result.setEditable(false);
-		return new VBox(10, betMoney, betChoices, startBtn, result, playBtn);
+
+		VBox selection = new VBox(10, logo, betRow, betChoices, startHBox, result, playHBox);
+		selection.setMaxWidth(316.7);
+		selection.setStyle("-fx-background-color: #ff8a65;");
+		DropShadow vBoxDS = new DropShadow();
+		vBoxDS.setHeight(0);
+		selection.setEffect(vBoxDS);
+		VBox.setMargin(logo, new Insets(20, 30, 0, 30));
+		VBox.setMargin(betRow, new Insets(50,50,0,50));
+		VBox.setMargin(betChoices, new Insets(0,10,0,10));
+		VBox.setMargin(startHBox, new Insets(0,10,0,10));
+		VBox.setMargin(playHBox, new Insets(10,10,10,10));
+		return selection;
 	}
 
 	private BorderPane initRightVBox() {
@@ -270,12 +311,6 @@ public class BaccaratGame extends Application {
 		return board;
 	}
 
-	public Scene gameBoardScene() {
-		//Temporary Holder
-		BorderPane pane = new BorderPane();
-		return new Scene(pane, 950, 600);
-	}
-
 	private void gamePlay() {
 //		theDealer.shuffleDeck();
 //
@@ -298,16 +333,18 @@ public class BaccaratGame extends Application {
 		bankerCard2.setText(Integer.toString(bankerHand.get(1).getValue()));
 
 		Card player3rdC = null;
-		if (gameLogic.evaluatePlayerDraw(playerHand)) {
-			player3rdC = theDealer.drawOne();
-			playerHand.add(player3rdC);
+		if (gameLogic.whoWon(playerHand, bankerHand).equals("None")) {
+			if (gameLogic.evaluatePlayerDraw(playerHand)) {
+				player3rdC = theDealer.drawOne();
+				playerHand.add(player3rdC);
 //			playerCard3 = new ImageView(CardImage(playerHand.get(2).getSuite(), playerHand.get(2).getValue()));
-			playerCard3.setText(Integer.toString(playerHand.get(2).getValue()));
-		}
-		if (gameLogic.evaluateBankerDraw(bankerHand, player3rdC)) {
-			bankerHand.add(theDealer.drawOne());
+				playerCard3.setText(Integer.toString(playerHand.get(2).getValue()));
+			}
+			if (gameLogic.evaluateBankerDraw(bankerHand, player3rdC)) {
+				bankerHand.add(theDealer.drawOne());
 //			bankerCard3 = new ImageView(CardImage(bankerHand.get(2).getSuite(), bankerHand.get(2).getValue()));
-			bankerCard3.setText(Integer.toString(bankerHand.get(2).getValue()));
+				bankerCard3.setText(Integer.toString(bankerHand.get(2).getValue()));
+			}
 		}
 		gameEnd();
 	}
@@ -330,7 +367,7 @@ public class BaccaratGame extends Application {
 		String winnerMsg = winner + " wins!\n";
 		String msg = "";
 		if (choice.equals(winner)) {
-			msg = "Congratuations! You bet " + choice + "! You win!";
+			msg = "Congratulations! You bet " + choice + "! You win!";
 		} else {
 			msg = "Sorry, you bet " + choice + "! You lost your bet!";
 		}
@@ -338,7 +375,7 @@ public class BaccaratGame extends Application {
 	}
 
 	private Image CardImage(String suite, int value) {
-		if (suite == "Hearts") {
+		if (suite == "Hearts") { // use .equals not ==
 			return (new Image(value + "H.png"));
 		}else if (suite == "Diamonds") {
 			return (new Image(value + "D.png"));

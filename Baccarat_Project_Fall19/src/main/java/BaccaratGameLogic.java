@@ -10,15 +10,14 @@ public class BaccaratGameLogic{
         if (hand1.size() == 1 && hand2.size() == 1) {
             if (playerTotal >= 8 && bankerTotal < 8)
                 return "Player";
-            if (bankerTotal >= 8 && playerTotal < 8)
+            else if (bankerTotal >= 8 && playerTotal < 8)
                 return "Banker";
+            return "None";
         }
 
-        if (handTotal(hand1) >= 8 || 
-            handTotal(hand1) > handTotal(hand2))
+        if (playerTotal > bankerTotal)
             return "Player";
-        else if (handTotal(hand2) >= 8 || 
-                 handTotal(hand2) > handTotal(hand1))
+        else if (bankerTotal > playerTotal)
             return "Banker";
         return "Draw";
     }
