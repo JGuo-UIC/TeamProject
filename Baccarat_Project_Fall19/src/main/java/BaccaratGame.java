@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.Label;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -290,6 +291,41 @@ public class BaccaratGame extends Application {
 
 	private GridPane initRightGrid() {
 		GridPane board = new GridPane();
+        Text playerTextP = new Text("P");
+        playerTextP.setFill(Color.web("#ffc400"));
+        Text playerTextL = new Text("L");
+        playerTextL.setFill(Color.web("#ffc400"));
+        Text playerTextA = new Text("A");
+        playerTextA.setFill(Color.web("#ffc400"));
+        Text playerTextY = new Text("Y");
+        playerTextY.setFill(Color.web("#ffc400"));
+        Text playerTextE = new Text("E");
+        playerTextE.setFill(Color.web("#ffc400"));
+        Text playerTextR = new Text("R");
+        playerTextR.setFill(Color.web("#ffc400"));
+        VBox playerText = new VBox(playerTextP,playerTextL,playerTextA,playerTextY,playerTextE,playerTextR);
+        playerText.setStyle("-fx-font-family: Algerian;" +
+                "-fx-font-size: 35;" +
+                "-fx-font-color: #ffc400;");
+        playerText.setPadding(new Insets(0,10,0,0));
+
+        Text bankerTextB = new Text("B");
+        bankerTextB.setFill(Color.web("#ffc400"));
+        Text bankerTextA = new Text("A");
+        bankerTextA.setFill(Color.web("#ffc400"));
+        Text bankerTextN = new Text("N");
+        bankerTextN.setFill(Color.web("#ffc400"));
+        Text bankerTextK = new Text("K");
+        bankerTextK.setFill(Color.web("#ffc400"));
+        Text bankerTextE = new Text("E");
+        bankerTextE.setFill(Color.web("#ffc400"));
+        Text bankerTextR = new Text("R");
+        bankerTextR.setFill(Color.web("#ffc400"));
+        VBox bankerText = new VBox(bankerTextB,bankerTextA,bankerTextN,bankerTextK,bankerTextE,bankerTextR);
+        bankerText.setStyle("-fx-font-family: Algerian;" +
+                "-fx-font-size: 35;");
+        //bankerText.set
+        bankerText.setPadding(new Insets(0,10,0,0));
 		//board.setGridLinesVisible(true);
 		board.setAlignment(Pos.CENTER);
 
@@ -302,7 +338,7 @@ public class BaccaratGame extends Application {
         bankerCard3 = new ImageView();
 		bankerCard3.setPreserveRatio(true);
 		bankerCard3.setFitHeight(250);
-		bankerPos = new HBox(bankerCard1, bankerCard2, bankerCard3);
+		bankerPos = new HBox(bankerText, bankerCard1, bankerCard2, bankerCard3);
 		bankerPos.setMargin(bankerCard1, new Insets(0,10,0,0));
 		bankerPos.setMargin(bankerCard2, new Insets(0,10,0,0));
 
@@ -318,7 +354,7 @@ public class BaccaratGame extends Application {
 		playerPos.setMargin(playerCard1, new Insets(0,10,0,0));
 		playerPos.setMargin(playerCard2, new Insets(0,10,0,0));
 
-		playerPos = new HBox(playerCard1, playerCard2, playerCard3);
+		playerPos = new HBox(playerText, playerCard1, playerCard2, playerCard3);
 		board.add(bankerPos, 0,2);
 		board.add(playerPos, 0,10);
 		board.setVgap(10);
