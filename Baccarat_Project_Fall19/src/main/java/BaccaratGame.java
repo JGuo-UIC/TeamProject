@@ -52,7 +52,8 @@ public class BaccaratGame extends Application {
 	boolean playerWin;
 
 	MenuBar menuBar = new MenuBar();
-	HashMap<String, Scene> sceneMap = new HashMap<String, Scene>();
+    MenuItem frshStart;
+    HashMap<String, Scene> sceneMap = new HashMap<String, Scene>();
 
 	// Left VBox
 	TextField betMoney;
@@ -122,7 +123,7 @@ public class BaccaratGame extends Application {
 	public void initMenu(Stage primaryStage) {
 		Menu mainMenu = new Menu();
 		mainMenu.setText("Options");
-		MenuItem frshStart = new MenuItem();
+		frshStart = new MenuItem();
 		MenuItem exitItm = new MenuItem();
 
 		frshStart.setText("Fresh Start");
@@ -146,7 +147,7 @@ public class BaccaratGame extends Application {
 
 		VBox selection = initLeftVBox();
 		GridPane game = initRightGrid();
-		Text displayWinnings = new Text("Total Winnings: ");
+		Text displayWinnings = new Text("Total Winnings: $");
 
 		displayWinnings.setFont(Font.font("Algerian", FontWeight.EXTRA_BOLD, 30));
 		displayWinnings.setFill(Color.web("#ffc400"));
@@ -201,7 +202,7 @@ public class BaccaratGame extends Application {
 		PlayerButt.setEffect(dropShadow);
 		PlayerButt.setStyle("-fx-background-radius:15em; -fx-background-color:#ffc400;");
 		// Select Tie
-		TieButt = new ToggleButton("Bet Tie");
+		TieButt = new ToggleButton("Bet Draw");
 		TieButt.setPrefSize(100, 20);
 		TieButt.setToggleGroup(toggleGrp);
 		TieButt.setId("Draw");
@@ -377,7 +378,8 @@ public class BaccaratGame extends Application {
 	}
 
 	private void gamePlay() {
-		SequentialTransition sT;
+        frshStart.setDisable(true);
+        SequentialTransition sT;
 		PauseTransition pause1 = new PauseTransition(Duration.seconds(2));
 		PauseTransition pause2 = new PauseTransition(Duration.seconds(2));
 		PauseTransition pause3 = new PauseTransition(Duration.seconds(2));
@@ -439,6 +441,7 @@ public class BaccaratGame extends Application {
 			playerWin = false;
 		currWinnings.setText(Double.toString(evaluateWinnings()));
 		playBtn.setDisable(false);
+        frshStart.setDisable(false);
 	}
 
 	private String gameEndMsg(String winner) {
