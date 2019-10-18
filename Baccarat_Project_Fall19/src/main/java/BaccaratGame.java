@@ -141,8 +141,19 @@ public class BaccaratGame extends Application {
 
 		VBox selection = initLeftVBox();
 		GridPane game = initRightGrid();
+		Text displayWinnings = new Text("Total Winnings: ");
+
+		displayWinnings.setFont(Font.font("Algerian", FontWeight.EXTRA_BOLD, 30));
+		displayWinnings.setFill(Color.web("#ffc400"));
+		currWinnings = new TextField();
+		currWinnings.setEditable(false);
+		currWinnings.setText(Double.toString(totalWinnings));
+		HBox winningBar = new HBox(displayWinnings,currWinnings);
+		winningBar.setAlignment(Pos.CENTER);
+		winningBar.setPadding(new Insets(10,0,0,0));
+		VBox twPos = new VBox(winningBar,game);
 		pane.setLeft(selection);
-		pane.setCenter(game);
+		pane.setCenter(twPos);
 		pane.setStyle("-fx-background-color: #00695c;");
 
 		return new Scene(pane, 950, 700);
@@ -261,15 +272,9 @@ public class BaccaratGame extends Application {
 		HBox playHBox = new HBox(playBtn);
 		playHBox.setAlignment(Pos.BOTTOM_CENTER);
 
-		result.setEditable(false);
+        result.setEditable(false);
 
-		Text displayWinnings = new Text("Total Winnings: ");
-		currWinnings = new TextField();
-		currWinnings.setEditable(false);
-		currWinnings.setText(Double.toString(totalWinnings));
-		HBox winningBar = new HBox(displayWinnings, currWinnings);
-
-		VBox selection = new VBox(10, logo, betRow, betChoices, startHBox, winningBar, result, playHBox);
+        VBox selection = new VBox(10, logo, betRow, betChoices, startHBox, result, playHBox);
 		selection.setMaxWidth(316.7);
 		selection.setStyle("-fx-background-color: #d32f2f;");
 		DropShadow vBoxDS = new DropShadow();

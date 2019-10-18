@@ -1,4 +1,4 @@
-BaccaratGame.class
+BaccaratGameLogic.class
 Card.class
 BaccaratDealer.class
-BaccaratGameLogic.class
+BaccaratGame.class
