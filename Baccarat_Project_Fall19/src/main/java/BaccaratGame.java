@@ -291,6 +291,9 @@ public class BaccaratGame extends Application {
 
 	private GridPane initRightGrid() {
 		GridPane board = new GridPane();
+		/*
+		Labels Player and Banker, Changes color of each letter and fonts
+		 */
         Text playerTextP = new Text("P");
         playerTextP.setFill(Color.web("#ffc400"));
         Text playerTextL = new Text("L");
@@ -303,10 +306,10 @@ public class BaccaratGame extends Application {
         playerTextE.setFill(Color.web("#ffc400"));
         Text playerTextR = new Text("R");
         playerTextR.setFill(Color.web("#ffc400"));
+        //Add all the letter vertically
         VBox playerText = new VBox(playerTextP,playerTextL,playerTextA,playerTextY,playerTextE,playerTextR);
         playerText.setStyle("-fx-font-family: Algerian;" +
-                "-fx-font-size: 35;" +
-                "-fx-font-color: #ffc400;");
+                "-fx-font-size: 35;");
         playerText.setPadding(new Insets(0,10,0,0));
 
         Text bankerTextB = new Text("B");
@@ -321,6 +324,7 @@ public class BaccaratGame extends Application {
         bankerTextE.setFill(Color.web("#ffc400"));
         Text bankerTextR = new Text("R");
         bankerTextR.setFill(Color.web("#ffc400"));
+        //Add all the letter vertically
         VBox bankerText = new VBox(bankerTextB,bankerTextA,bankerTextN,bankerTextK,bankerTextE,bankerTextR);
         bankerText.setStyle("-fx-font-family: Algerian;" +
                 "-fx-font-size: 35;");
