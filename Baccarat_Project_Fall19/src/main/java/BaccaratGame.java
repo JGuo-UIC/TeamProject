@@ -78,18 +78,22 @@ public class BaccaratGame extends Application {
 	public double evaluateWinnings() {
 		double resultWinnings = 0.0;
 		if (playerWin) {
-			if (choice.equals("Player")) {
+			if (choice.equals("Player"))
 				resultWinnings = totalWinnings + currentBet * 2;
-			} else if (choice.equals("Banker")) {
+			else if (choice.equals("Banker"))
 				resultWinnings = totalWinnings + currentBet * 1.95;
-			} else {
+			else
 				resultWinnings = totalWinnings + currentBet * 8;
-			}
+			if (totalWinnings > resultWinnings) // deals with overflow
+			    resultWinnings = Double.MAX_VALUE;
 		} else {
 			resultWinnings = totalWinnings - currentBet;
+			if (totalWinnings < resultWinnings) // deals with overflow
+			    resultWinnings = Double.MIN_VALUE;
 		}
 		totalWinnings = resultWinnings;
-		return resultWinnings;
+
+		return totalWinnings;
 	}
 
 	public static void main(String[] args) {
@@ -174,6 +178,7 @@ public class BaccaratGame extends Application {
 		// Textfield for bet
 		betMoney = new TextField();
 		betMoney.setPromptText("Enter your bid here!");
+
 		betMoney.setDisable(true);
 		dollar.setTextAlignment(TextAlignment.CENTER);
 		HBox betRow = new HBox(dollar, betMoney);
@@ -241,7 +246,7 @@ public class BaccaratGame extends Application {
 		startBtn = new Button("Confirm Bet");
 		startBtn.setOnAction(e -> {
 			if (!betMoney.getText().equals("")) {
-				currentBet = Integer.parseInt(betMoney.getText());
+				currentBet = Double.parseDouble(betMoney.getText());
 				betMoney.setDisable(true);
 				betChoices.setDisable(true);
 				startBtn.setDisable(true);
@@ -454,30 +459,5 @@ public class BaccaratGame extends Application {
 				return (new Image(val + "C.png"));
 		}
 		return null;
-}
-
-//	return (new Image(getClass().getResource("resources/" + value + "C.png").toExternalForm()));
-//  return (new Image(getClass().getResource(value + "H.png").toExternalForm()));
-    /* Optional to implement the Welcome Scene
-		StackPane root = new StackPane();
-
-		//Welcome Scene
-		welcome = new Text("Welcome to a game of Baccarat\n\n");
-		startButt = new Button("Let's Begin!");
-		startButt.setOnAction(e->stage.setScene(sceneMap.get("scene")));
-		sceneMap.put("scene", SceneController());
-		welcome.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
-		welcome.setFill(Color.SKYBLUE);
-		welcome.setTextAlignment(TextAlignment.CENTER);
-		StackPane.setAlignment(welcome, Pos.CENTER);
-		Image image = new Image(welcomePage.jpg);
-		root.setStyle("-fx-background-image: url('"+image+"');" +
-				"-fx-background-position: center center;");
-		root.getChildren().addAll(welcome, startButt);
-		*/
-//	public Scene SceneController(){
-//		vb = new VBox(new Label("To Be Added"));
-//		return new Scene(vb, 950,600);
-//	}
-
+    }
 }
