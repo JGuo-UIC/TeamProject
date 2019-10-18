@@ -28,6 +28,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
@@ -40,7 +41,6 @@ import javax.imageio.ImageIO;
 public class BaccaratGame extends Application {
 	ArrayList<Card> playerHand;
 	ArrayList<Card> bankerHand;
-	ArrayList<Card> deck;
 
 	BaccaratDealer theDealer = new BaccaratDealer();
 	BaccaratGameLogic gameLogic = new BaccaratGameLogic();
@@ -58,19 +58,12 @@ public class BaccaratGame extends Application {
 	Button startBtn;
 	ToggleButton PlayerButt, BankerButt, TieButt;
 	ToggleGroup toggleGrp;
-	EventHandler<ActionEvent> bpdButt;
 	HBox betChoices;
 	Button playBtn;
 	TextArea result = new TextArea();
 	TextField currWinnings;
 
 	// Right VBox
-//	TextField bankerCard1;
-//	TextField bankerCard2;
-//	TextField bankerCard3;
-//	TextField playerCard1;
-//	TextField playerCard2;
-//	TextField playerCard3;
 	ImageView bankerCard1;
 	ImageView bankerCard2;
 	ImageView bankerCard3;
@@ -150,7 +143,7 @@ public class BaccaratGame extends Application {
 		GridPane game = initRightGrid();
 		pane.setLeft(selection);
 		pane.setCenter(game);
-		pane.setStyle("-fx-background-color: #43a047;");
+		pane.setStyle("-fx-background-color: #00695c;");
 
 		return new Scene(pane, 950, 700);
 	}
@@ -182,21 +175,21 @@ public class BaccaratGame extends Application {
 		BankerButt.setToggleGroup(toggleGrp);
 		BankerButt.setId("Banker");
 		BankerButt.setEffect(dropShadow);
-		BankerButt.setStyle("-fx-background-radius:15em;");
+		BankerButt.setStyle("-fx-background-radius:15em; -fx-background-color:#ffc400;");
 		// Select Player
 		PlayerButt = new ToggleButton("Bet Player");
 		PlayerButt.setPrefSize(100, 20);
 		PlayerButt.setToggleGroup(toggleGrp);
 		PlayerButt.setId("Player");
 		PlayerButt.setEffect(dropShadow);
-		PlayerButt.setStyle("-fx-background-radius:15em;");
+		PlayerButt.setStyle("-fx-background-radius:15em; -fx-background-color:#ffc400;");
 		// Select Tie
 		TieButt = new ToggleButton("Bet Tie");
 		TieButt.setPrefSize(100, 20);
 		TieButt.setToggleGroup(toggleGrp);
 		TieButt.setId("Draw");
 		TieButt.setEffect(dropShadow);
-		TieButt.setStyle("-fx-background-radius:15em;");
+		TieButt.setStyle("-fx-background-radius:15em; -fx-background-color:#ffc400;");
 		betChoices = new HBox(8.5, BankerButt, PlayerButt, TieButt);
 		betChoices.setDisable(true);
 
@@ -211,17 +204,26 @@ public class BaccaratGame extends Application {
 		});
 
 		//After Player, Banker, or Tie butt are pressed
-		bpdButt = new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent pressed) {
-				ToggleButton butt = (ToggleButton) pressed.getSource();
-				choice = butt.getId();
-				//primaryStage.setScene(sceneMap.get("gameScene")); //switches to the game scene
-			}
+		EventHandler<MouseEvent> btnPressedHandler = e -> {
+			ToggleButton btn = (ToggleButton) e.getSource();
+			btn.setStyle("-fx-background-radius:15em; -fx-background-color: #ff9100;");
+			choice = btn.getId();
 		};
 
-		BankerButt.setOnAction(bpdButt);
-		PlayerButt.setOnAction(bpdButt);
-		TieButt.setOnAction(bpdButt);
+		EventHandler<MouseEvent> btnReleasedHandler = e -> {
+			ToggleButton btn = (ToggleButton) e.getSource();
+			btn.setStyle("-fx-background-radius:15em; -fx-background-color: #ffc400;");
+			choice = btn.getId();
+		};
+
+		BankerButt.setOnMousePressed(btnPressedHandler);
+		BankerButt.setOnMouseReleased(btnReleasedHandler);
+
+		PlayerButt.setOnMousePressed(btnPressedHandler);
+		PlayerButt.setOnMouseReleased(btnReleasedHandler);
+
+		TieButt.setOnMousePressed(btnPressedHandler);
+		TieButt.setOnMouseReleased(btnReleasedHandler);
 
 		// Button to submit the player's bet and start the game
 		startBtn = new Button("Confirm Bet");
@@ -269,7 +271,7 @@ public class BaccaratGame extends Application {
 
 		VBox selection = new VBox(10, logo, betRow, betChoices, startHBox, winningBar, result, playHBox);
 		selection.setMaxWidth(316.7);
-		selection.setStyle("-fx-background-color: #ff8a65;");
+		selection.setStyle("-fx-background-color: #d32f2f;");
 		DropShadow vBoxDS = new DropShadow();
 		vBoxDS.setHeight(0);
 		selection.setEffect(vBoxDS);
@@ -312,8 +314,8 @@ public class BaccaratGame extends Application {
 		playerPos.setMargin(playerCard2, new Insets(0,10,0,0));
 
 		playerPos = new HBox(playerCard1, playerCard2, playerCard3);
-		board.add(playerPos, 0,2);
-		board.add(bankerPos, 0,10);
+		board.add(bankerPos, 0,2);
+		board.add(playerPos, 0,10);
 		board.setVgap(10);
 
 		return board;
@@ -368,7 +370,7 @@ public class BaccaratGame extends Application {
 		pause6.setOnFinished(e -> {
 			gameEnd();
 		});
-		sT = new SequentialTransition(pause1,pause2,pause3,pause4,pause5,pause6);
+		sT = new SequentialTransition(pause1,pause3,pause2,pause4,pause5,pause6);
 		sT.play();
 	}
 
