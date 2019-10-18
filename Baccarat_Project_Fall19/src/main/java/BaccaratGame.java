@@ -60,18 +60,18 @@ public class BaccaratGame extends Application {
 
 	// Right VBox
 	TextField currWinnings;
-	//	TextField bankerCard1;
-//	TextField bankerCard2;
-//	TextField bankerCard3;
-//	TextField playerCard1;
-//	TextField playerCard2;
-//	TextField playerCard3;
-	ImageView bankerCard1;
-	ImageView bankerCard2;
-	ImageView bankerCard3;
-	ImageView playerCard1;
-	ImageView playerCard2;
-	ImageView playerCard3;
+	TextField bankerCard1;
+	TextField bankerCard2;
+	TextField bankerCard3;
+	TextField playerCard1;
+	TextField playerCard2;
+	TextField playerCard3;
+//	ImageView bankerCard1;
+//	ImageView bankerCard2;
+//	ImageView bankerCard3;
+//	ImageView playerCard1;
+//	ImageView playerCard2;
+//	ImageView playerCard3;
 
 	// evaluateWinnings calculate the player's amount of totalWinnings after the end of a game
 	public double evaluateWinnings() {
@@ -232,39 +232,39 @@ public class BaccaratGame extends Application {
 		HBox winningBar = new HBox(displayWinnings, currWinnings);
 		board.setTop(winningBar);
 
-//		bankerCard1 = new TextField();
-//		bankerCard1.setEditable(false);
-//		bankerCard2 = new TextField();
-//		bankerCard2.setEditable(false);
-//		bankerCard3 = new TextField();
-//		bankerCard3.setEditable(false);
+		bankerCard1 = new TextField();
+		bankerCard1.setEditable(false);
+		bankerCard2 = new TextField();
+		bankerCard2.setEditable(false);
+		bankerCard3 = new TextField();
+		bankerCard3.setEditable(false);
 
 //        bankerCard1 = new ImageView();
 //        bankerCard2 = new ImageView();
 //        bankerCard3 = new ImageView();
 
-        GridPane imagePane = new GridPane();
-        imagePane.add(playerCard1, 0,0);
-        imagePane.add(playerCard2,0,1);
-        imagePane.add(playerCard3,0,2);
-        imagePane.add(bankerCard1,1,0);
-        imagePane.add(bankerCard2,1,1);
-        imagePane.add(bankerCard3,1,2);
-		//HBox bankerPos = new HBox(bankerCard1, bankerCard2, bankerCard3);
+//        GridPane imagePane = new GridPane();
+//        imagePane.add(playerCard1, 0,0);
+//        imagePane.add(playerCard2,0,1);
+//        imagePane.add(playerCard3,0,2);
+//        imagePane.add(bankerCard1,1,0);
+//        imagePane.add(bankerCard2,1,1);
+//        imagePane.add(bankerCard3,1,2);
+		HBox bankerPos = new HBox(bankerCard1, bankerCard2, bankerCard3);
 
-//		playerCard1 = new TextField();
-//		playerCard1.setEditable(false);
-//		playerCard2 = new TextField();
-//		playerCard2.setEditable(false);
-//		playerCard3 = new TextField();
-//		playerCard3.setEditable(false);
+		playerCard1 = new TextField();
+		playerCard1.setEditable(false);
+		playerCard2 = new TextField();
+		playerCard2.setEditable(false);
+		playerCard3 = new TextField();
+		playerCard3.setEditable(false);
 
 //        playerCard1 = new ImageView();
 //        playerCard2 = new ImageView();
 //        playerCard3 = new ImageView();
 
-		//HBox playerPos = new HBox(playerCard1, playerCard2, playerCard3);
-		VBox bankerNPlayer = new VBox(imagePane); //(bankerPos, playerPos);
+		HBox playerPos = new HBox(playerCard1, playerCard2, playerCard3);
+		VBox bankerNPlayer = new VBox(bankerPos, playerPos);
 		board.setCenter(bankerNPlayer);
 
 		return board;
@@ -277,37 +277,37 @@ public class BaccaratGame extends Application {
 	}
 
 	private void gamePlay() {
-		theDealer.shuffleDeck();
-
-		playerHand = theDealer.dealHand();
-		playerCard1 = new ImageView(CardImage(playerHand.get(0).getSuite(), playerHand.get(0).getValue()));
-		playerCard2 = new ImageView(CardImage(playerHand.get(1).getSuite(), playerHand.get(1).getValue()));
-
-		bankerHand = theDealer.dealHand();
-		bankerCard1 = new ImageView(CardImage(bankerHand.get(0).getSuite(), bankerHand.get(0).getValue()));
-		bankerCard2 = new ImageView(CardImage(bankerHand.get(1).getSuite(), bankerHand.get(1).getValue()));
-
 //		theDealer.shuffleDeck();
 //
 //		playerHand = theDealer.dealHand();
-//		playerCard1.setText(Integer.toString(playerHand.get(0).getValue()));
-//		playerCard2.setText(Integer.toString(playerHand.get(1).getValue()));
+//		playerCard1 = new ImageView(CardImage(playerHand.get(0).getSuite(), playerHand.get(0).getValue()));
+//		playerCard2 = new ImageView(CardImage(playerHand.get(1).getSuite(), playerHand.get(1).getValue()));
 //
 //		bankerHand = theDealer.dealHand();
-//		bankerCard1.setText(Integer.toString(bankerHand.get(0).getValue()));
-//		bankerCard2.setText(Integer.toString(bankerHand.get(1).getValue()));
+//		bankerCard1 = new ImageView(CardImage(bankerHand.get(0).getSuite(), bankerHand.get(0).getValue()));
+//		bankerCard2 = new ImageView(CardImage(bankerHand.get(1).getSuite(), bankerHand.get(1).getValue()));
+
+		theDealer.shuffleDeck();
+
+		playerHand = theDealer.dealHand();
+		playerCard1.setText(Integer.toString(playerHand.get(0).getValue()));
+		playerCard2.setText(Integer.toString(playerHand.get(1).getValue()));
+
+		bankerHand = theDealer.dealHand();
+		bankerCard1.setText(Integer.toString(bankerHand.get(0).getValue()));
+		bankerCard2.setText(Integer.toString(bankerHand.get(1).getValue()));
 
 		Card player3rdC = null;
 		if (gameLogic.evaluatePlayerDraw(playerHand)) {
 			player3rdC = theDealer.drawOne();
 			playerHand.add(player3rdC);
-			playerCard3 = new ImageView(CardImage(playerHand.get(2).getSuite(), playerHand.get(2).getValue()));
-			//playerCard3.setText(Integer.toString(playerHand.get(2).getValue()));
+//			playerCard3 = new ImageView(CardImage(playerHand.get(2).getSuite(), playerHand.get(2).getValue()));
+			playerCard3.setText(Integer.toString(playerHand.get(2).getValue()));
 		}
 		if (gameLogic.evaluateBankerDraw(bankerHand, player3rdC)) {
 			bankerHand.add(theDealer.drawOne());
-			bankerCard3 = new ImageView(CardImage(bankerHand.get(2).getSuite(), bankerHand.get(2).getValue()));
-			//bankerCard3.setText(Integer.toString(bankerHand.get(2).getValue()));
+//			bankerCard3 = new ImageView(CardImage(bankerHand.get(2).getSuite(), bankerHand.get(2).getValue()));
+			bankerCard3.setText(Integer.toString(bankerHand.get(2).getValue()));
 		}
 		gameEnd();
 	}
