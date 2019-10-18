@@ -211,6 +211,11 @@ public class BaccaratGame extends Application {
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				if (!newValue.matches("\\d*([\\.]\\d{0,2})?")) {
 					betMoney.setText(newValue.replaceAll("\\D", ""));
+					final int maxLength = 7;
+					if (betMoney.getText().length() > maxLength) {
+						String s = betMoney.getText().substring(0, maxLength);
+						betMoney.setText(s);
+					}
 				}
 			}
 		});
