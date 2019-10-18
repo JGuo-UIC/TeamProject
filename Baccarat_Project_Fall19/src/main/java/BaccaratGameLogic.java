@@ -7,7 +7,7 @@ public class BaccaratGameLogic{
         int bankerTotal = handTotal(hand2);
 
         //check natural winning condition
-        if (hand1.size() == 1 && hand2.size() == 1) {
+        if (hand1.size() == 2 && hand2.size() == 2) {
             if (playerTotal >= 8 && bankerTotal < 8)
                 return "Player";
             else if (bankerTotal >= 8 && playerTotal < 8)

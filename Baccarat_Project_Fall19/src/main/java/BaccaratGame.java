@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.sun.prism.paint.ImagePattern;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -31,6 +33,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import javax.imageio.ImageIO;
 
@@ -59,21 +62,23 @@ public class BaccaratGame extends Application {
 	HBox betChoices;
 	Button playBtn;
 	TextArea result = new TextArea();
+	TextField currWinnings;
 
 	// Right VBox
-	TextField currWinnings;
-	TextField bankerCard1;
-	TextField bankerCard2;
-	TextField bankerCard3;
-	TextField playerCard1;
-	TextField playerCard2;
-	TextField playerCard3;
-//	ImageView bankerCard1;
-//	ImageView bankerCard2;
-//	ImageView bankerCard3;
-//	ImageView playerCard1;
-//	ImageView playerCard2;
-//	ImageView playerCard3;
+//	TextField bankerCard1;
+//	TextField bankerCard2;
+//	TextField bankerCard3;
+//	TextField playerCard1;
+//	TextField playerCard2;
+//	TextField playerCard3;
+	ImageView bankerCard1;
+	ImageView bankerCard2;
+	ImageView bankerCard3;
+	ImageView playerCard1;
+	ImageView playerCard2;
+	ImageView playerCard3;
+	HBox bankerPos;
+	HBox playerPos;
 
 	// evaluateWinnings calculate the player's amount of totalWinnings after the end of a game
 	public double evaluateWinnings() {
@@ -110,7 +115,7 @@ public class BaccaratGame extends Application {
 		totalWinnings = 0.0;
 		result.clear();
 		sceneMap.put("scene", mainScene());
-		//sceneMap.put("gameScene", gameBoardScene());
+
 		primaryStage.setScene(sceneMap.get("scene"));
 		primaryStage.show();
 	}
@@ -142,12 +147,12 @@ public class BaccaratGame extends Application {
 		pane.setTop(menuBar);
 
 		VBox selection = initLeftVBox();
-		BorderPane game = initRightVBox();
+		GridPane game = initRightGrid();
 		pane.setLeft(selection);
 		pane.setCenter(game);
 		pane.setStyle("-fx-background-color: #43a047;");
 
-		return new Scene(pane, 950, 600);
+		return new Scene(pane, 950, 700);
 	}
 
 	private VBox initLeftVBox() {
@@ -243,6 +248,12 @@ public class BaccaratGame extends Application {
 			betChoices.setDisable(false);
 			startBtn.setDisable(false);
 			playBtn.setDisable(true);
+			playerCard1.setImage(null);
+			playerCard2.setImage(null);
+			playerCard3.setImage(null);
+			bankerCard1.setImage(null);
+			bankerCard2.setImage(null);
+			bankerCard3.setImage(null);
 		});
 		playBtn.setEffect(dropShadow);
 		HBox playHBox = new HBox(playBtn);
@@ -250,7 +261,13 @@ public class BaccaratGame extends Application {
 
 		result.setEditable(false);
 
-		VBox selection = new VBox(10, logo, betRow, betChoices, startHBox, result, playHBox);
+		Text displayWinnings = new Text("Total Winnings: ");
+		currWinnings = new TextField();
+		currWinnings.setEditable(false);
+		currWinnings.setText(Double.toString(totalWinnings));
+		HBox winningBar = new HBox(displayWinnings, currWinnings);
+
+		VBox selection = new VBox(10, logo, betRow, betChoices, startHBox, winningBar, result, playHBox);
 		selection.setMaxWidth(316.7);
 		selection.setStyle("-fx-background-color: #ff8a65;");
 		DropShadow vBoxDS = new DropShadow();
@@ -264,89 +281,95 @@ public class BaccaratGame extends Application {
 		return selection;
 	}
 
-	private BorderPane initRightVBox() {
-		BorderPane board = new BorderPane();
-		Text displayWinnings = new Text("Total Winnings: ");
-		currWinnings = new TextField();
-		currWinnings.setEditable(false);
-		currWinnings.setText(Double.toString(totalWinnings));
-		HBox winningBar = new HBox(displayWinnings, currWinnings);
-		board.setTop(winningBar);
+	private GridPane initRightGrid() {
+		GridPane board = new GridPane();
+		//board.setGridLinesVisible(true);
+		board.setAlignment(Pos.CENTER);
 
-		bankerCard1 = new TextField();
-		bankerCard1.setEditable(false);
-		bankerCard2 = new TextField();
-		bankerCard2.setEditable(false);
-		bankerCard3 = new TextField();
-		bankerCard3.setEditable(false);
+        bankerCard1 = new ImageView();
+        bankerCard1.setPreserveRatio(true);
+		bankerCard1.setFitHeight(250);
+        bankerCard2 = new ImageView();
+		bankerCard2.setPreserveRatio(true);
+		bankerCard2.setFitHeight(250);
+        bankerCard3 = new ImageView();
+		bankerCard3.setPreserveRatio(true);
+		bankerCard3.setFitHeight(250);
+		bankerPos = new HBox(bankerCard1, bankerCard2, bankerCard3);
+		bankerPos.setMargin(bankerCard1, new Insets(0,10,0,0));
+		bankerPos.setMargin(bankerCard2, new Insets(0,10,0,0));
 
-//        bankerCard1 = new ImageView();
-//        bankerCard2 = new ImageView();
-//        bankerCard3 = new ImageView();
+        playerCard1 = new ImageView();
+		playerCard1.setPreserveRatio(true);
+		playerCard1.setFitHeight(250);
+        playerCard2 = new ImageView();
+		playerCard2.setPreserveRatio(true);
+		playerCard2.setFitHeight(250);
+        playerCard3 = new ImageView();
+		playerCard3.setPreserveRatio(true);
+		playerCard3.setFitHeight(250);
+		playerPos.setMargin(playerCard1, new Insets(0,10,0,0));
+		playerPos.setMargin(playerCard2, new Insets(0,10,0,0));
 
-//        GridPane imagePane = new GridPane();
-//        imagePane.add(playerCard1, 0,0);
-//        imagePane.add(playerCard2,0,1);
-//        imagePane.add(playerCard3,0,2);
-//        imagePane.add(bankerCard1,1,0);
-//        imagePane.add(bankerCard2,1,1);
-//        imagePane.add(bankerCard3,1,2);
-		HBox bankerPos = new HBox(bankerCard1, bankerCard2, bankerCard3);
-
-		playerCard1 = new TextField();
-		playerCard1.setEditable(false);
-		playerCard2 = new TextField();
-		playerCard2.setEditable(false);
-		playerCard3 = new TextField();
-		playerCard3.setEditable(false);
-
-//        playerCard1 = new ImageView();
-//        playerCard2 = new ImageView();
-//        playerCard3 = new ImageView();
-
-		HBox playerPos = new HBox(playerCard1, playerCard2, playerCard3);
-		VBox bankerNPlayer = new VBox(bankerPos, playerPos);
-		board.setCenter(bankerNPlayer);
+		playerPos = new HBox(playerCard1, playerCard2, playerCard3);
+		board.add(playerPos, 0,2);
+		board.add(bankerPos, 0,10);
+		board.setVgap(10);
 
 		return board;
 	}
 
 	private void gamePlay() {
-//		theDealer.shuffleDeck();
-//
-//		playerHand = theDealer.dealHand();
-//		playerCard1 = new ImageView(CardImage(playerHand.get(0).getSuite(), playerHand.get(0).getValue()));
-//		playerCard2 = new ImageView(CardImage(playerHand.get(1).getSuite(), playerHand.get(1).getValue()));
-//
-//		bankerHand = theDealer.dealHand();
-//		bankerCard1 = new ImageView(CardImage(bankerHand.get(0).getSuite(), bankerHand.get(0).getValue()));
-//		bankerCard2 = new ImageView(CardImage(bankerHand.get(1).getSuite(), bankerHand.get(1).getValue()));
+		SequentialTransition sT;
+		PauseTransition pause1 = new PauseTransition(Duration.seconds(2));
+		PauseTransition pause2 = new PauseTransition(Duration.seconds(2));
+		PauseTransition pause3 = new PauseTransition(Duration.seconds(2));
+		PauseTransition pause4 = new PauseTransition(Duration.seconds(2));
+		PauseTransition pause5 = new PauseTransition(Duration.seconds(0));
+		PauseTransition pause6 = new PauseTransition(Duration.seconds(2));
 
 		theDealer.shuffleDeck();
-
 		playerHand = theDealer.dealHand();
-		playerCard1.setText(Integer.toString(playerHand.get(0).getValue()));
-		playerCard2.setText(Integer.toString(playerHand.get(1).getValue()));
-
 		bankerHand = theDealer.dealHand();
-		bankerCard1.setText(Integer.toString(bankerHand.get(0).getValue()));
-		bankerCard2.setText(Integer.toString(bankerHand.get(1).getValue()));
+
+		pause1.setOnFinished(e -> {
+			playerCard1.setImage(retrieveCard(playerHand.get(0)));
+		});
+
+		pause2.setOnFinished(e -> {
+			playerCard2.setImage(retrieveCard(playerHand.get(1)));
+		});
+
+		pause3.setOnFinished(e -> {
+			bankerCard1.setImage(retrieveCard(bankerHand.get(0)));
+		});
+		pause4.setOnFinished(e -> {
+			bankerCard2.setImage(retrieveCard(bankerHand.get(1)));
+		});
 
 		Card player3rdC = null;
 		if (gameLogic.whoWon(playerHand, bankerHand).equals("None")) {
+			pause5.setDuration(Duration.seconds(2));
 			if (gameLogic.evaluatePlayerDraw(playerHand)) {
 				player3rdC = theDealer.drawOne();
 				playerHand.add(player3rdC);
-//			playerCard3 = new ImageView(CardImage(playerHand.get(2).getSuite(), playerHand.get(2).getValue()));
-				playerCard3.setText(Integer.toString(playerHand.get(2).getValue()));
+				pause5.setOnFinished(e -> {
+					playerCard3.setImage(retrieveCard(playerHand.get(2)));
+				});
 			}
 			if (gameLogic.evaluateBankerDraw(bankerHand, player3rdC)) {
 				bankerHand.add(theDealer.drawOne());
-//			bankerCard3 = new ImageView(CardImage(bankerHand.get(2).getSuite(), bankerHand.get(2).getValue()));
-				bankerCard3.setText(Integer.toString(bankerHand.get(2).getValue()));
+				pause5.setOnFinished(e -> {
+					bankerCard3.setImage(retrieveCard(bankerHand.get(2)));
+				});
+				pause5.play();
 			}
 		}
-		gameEnd();
+		pause6.setOnFinished(e -> {
+			gameEnd();
+		});
+		sT = new SequentialTransition(pause1,pause2,pause3,pause4,pause5,pause6);
+		sT.play();
 	}
 
 	// gameEnd contains the logic for the end of the game
@@ -374,16 +397,20 @@ public class BaccaratGame extends Application {
 		return playerMsg + bankerMsg + winnerMsg + msg;
 	}
 
-	private Image CardImage(String suite, int value) {
-		if (suite == "Hearts") { // use .equals not ==
-			return (new Image(value + "H.png"));
-		}else if (suite == "Diamonds") {
-			return (new Image(value + "D.png"));
-		}else if (suite == "Spades") {
-			return (new Image(value + "S.png"));
-		}else{
-			return (new Image("resources/" + value + "C.png"));
+	private Image retrieveCard(Card c) {
+		String suit = c.getSuite();
+		int val = c.getValue();
+		switch (suit) {
+			case "Hearts":
+				return (new Image(val + "H.png"));
+			case "Diamonds":
+				return (new Image(val + "D.png"));
+			case "Spades":
+				return (new Image(val + "S.png"));
+			case "Clubs":
+				return (new Image(val + "C.png"));
 		}
+		return null;
 }
 
 //	return (new Image(getClass().getResource("resources/" + value + "C.png").toExternalForm()));
