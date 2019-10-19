@@ -10,9 +10,10 @@ public class Card {
         this.suite = theSuite;
         this.value = theValue;
     }
-
+    //set Getter for suite and value
     public String getSuite() {return this.suite;}
     public int getValue() {return this.value;}
+    //set setter for suite
     public boolean setSuite(String newSuite) {
         String[] suits = {"Spades", "Diamonds", "Clubs", "Hearts"};
         for (String suit : suits) {
@@ -23,6 +24,7 @@ public class Card {
         }        
         return false;
     }
+    //set setter for value
     public boolean setValue(int newVal) {
         if (newVal > 0 && newVal < 14) {        
             this.value = newVal;
