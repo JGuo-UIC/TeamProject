@@ -46,7 +46,7 @@ class DealerTest {
 	}
 
 	@Test
-	void testShuffle() { //Better?
+	void testShuffle() {
 		dealer.generateDeck();
 		ArrayList<Card> deck = dealer.getDeck();
 		assertTrue(deck.equals(dealer.getDeck()), "getDeck() has issues");
@@ -55,6 +55,19 @@ class DealerTest {
 			dealer.shuffleDeck();
 			assertFalse(deck.equals(dealer), "Did not shuffle the deck");
 		}
+	}
+
+	@Test
+	void testDeckLength() {
+		dealer.generateDeck();
+		assertEquals(52, dealer.deckSize(), "Wrong deck size");
+	}
+
+	@Test
+	void testGenNewDeckLen() {
+		dealer.generateDeck();
+		dealer.shuffleDeck();
+		assertEquals(52, dealer.deckSize(), "Wrong deck size");
 	}
 
 }

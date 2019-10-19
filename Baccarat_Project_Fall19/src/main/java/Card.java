@@ -1,7 +1,11 @@
+/*
+ * Card contains the attributes that describe a card: suite, value
+ */
 public class Card {
-    private String suite;
-    private int value;
+    public String suite;
+    public int value;
 
+    // constructor that initializes a card with the given values
     Card(String theSuite, int theValue) {
         this.suite = theSuite;
         this.value = theValue;
