@@ -460,7 +460,8 @@ public class BaccaratGame extends Application {
 		} else {
 			msg = "Sorry, you bet " + choice + "! You lost your bet!";
 		}
-		return playerMsg + bankerMsg + winnerMsg + msg;
+		String finalMsg = playerMsg + bankerMsg + winnerMsg + msg;
+		return finalMsg;
 	}
 
 	private Image retrieveCard(Card c) {
