@@ -40,6 +40,7 @@ import javafx.util.Duration;
 import javax.imageio.ImageIO;
 
 public class BaccaratGame extends Application {
+	//Holds card for Player and Banker
 	ArrayList<Card> playerHand;
 	ArrayList<Card> bankerHand;
 
@@ -47,10 +48,10 @@ public class BaccaratGame extends Application {
 	BaccaratGameLogic gameLogic = new BaccaratGameLogic();
 
 	String choice = "";
-	double currentBet;
-	double totalWinnings;
+	double currentBet; //Current Bet
+	double totalWinnings; //Total Wins, Adds the about bet to the winnings
 	boolean playerWin;
-
+	//Menu bar
 	MenuBar menuBar = new MenuBar();
     MenuItem frshStart;
     HashMap<String, Scene> sceneMap = new HashMap<String, Scene>();
@@ -78,13 +79,14 @@ public class BaccaratGame extends Application {
 	// evaluateWinnings calculate the player's amount of totalWinnings after the end of a game
 	public double evaluateWinnings() {
 		double resultWinnings = 0.0;
+		//Decides what happens if player wins
 		if (playerWin) {
 			if (choice.equals("Player"))
-				resultWinnings = totalWinnings + currentBet * 2;
+				resultWinnings = totalWinnings + currentBet * 2; //if bet on player 1:1
 			else if (choice.equals("Banker"))
-				resultWinnings = totalWinnings + currentBet * 1.95;
+				resultWinnings = totalWinnings + currentBet * 1.95; //if bet on banker 1:1 with 5% kept
 			else
-				resultWinnings = totalWinnings + currentBet * 8;
+				resultWinnings = totalWinnings + currentBet * 8; //if be on tie, 8:1
 			if (totalWinnings > resultWinnings) // deals with overflow
 			    resultWinnings = Double.MAX_VALUE;
 		} else {
@@ -109,7 +111,7 @@ public class BaccaratGame extends Application {
 		initMenu(primaryStage);
 		startGame(primaryStage);
 	}
-
+	//Inital Board
 	private void startGame(Stage primaryStage) {
 		totalWinnings = 0.0;
 		result.clear();
@@ -121,7 +123,7 @@ public class BaccaratGame extends Application {
 
 	// initMenu initializes a menu with two menu items: freshstart and exit, and add into menuBar
 	public void initMenu(Stage primaryStage) {
-		Menu mainMenu = new Menu();
+		Menu mainMenu = new Menu();	//Menu bar
 		mainMenu.setText("Options");
 		frshStart = new MenuItem();
 		MenuItem exitItm = new MenuItem();
@@ -131,7 +133,7 @@ public class BaccaratGame extends Application {
 			// Reset game
 			startGame(primaryStage);
 		});
-
+		//Exit the game
 		exitItm.setText("Exit");
 		exitItm.setOnAction(e -> {
 			Platform.exit();
@@ -140,48 +142,50 @@ public class BaccaratGame extends Application {
 		mainMenu.getItems().addAll(frshStart, exitItm);
 		menuBar.getMenus().add(mainMenu);
 	}
-
+	//All the layouts are returned here
 	public Scene mainScene() {
 		BorderPane pane = new BorderPane();
 		pane.setTop(menuBar);
-
+		//Get the layout for right side and the left side of the board
 		VBox selection = initLeftVBox();
 		GridPane game = initRightGrid();
+		//Creates the output box and display winning
 		Text displayWinnings = new Text("Total Winnings: $");
-
 		displayWinnings.setFont(Font.font("Algerian", FontWeight.EXTRA_BOLD, 30));
 		displayWinnings.setFill(Color.web("#ffc400"));
 		currWinnings = new TextField();
 		currWinnings.setEditable(false);
 		currWinnings.setText(Double.toString(totalWinnings));
+		//et the Total Winning on top of the cards
 		HBox winningBar = new HBox(displayWinnings,currWinnings);
 		winningBar.setAlignment(Pos.CENTER);
 		winningBar.setPadding(new Insets(10,0,0,0));
 		VBox twPos = new VBox(winningBar,game);
+		//Set the color of the board and place the left and right board
 		pane.setLeft(selection);
 		pane.setCenter(twPos);
 		pane.setStyle("-fx-background-color: #00695c;");
 
 		return new Scene(pane, 950, 700);
 	}
-
+	//Setup and logic for the selection buttons and outputs
 	private VBox initLeftVBox() {
+		//Title of the Game
 		ImageView logo = new ImageView(new Image("logo.png"));
 		logo.setFitWidth(255);
 		logo.setPreserveRatio(true);
-
+		//Styling for adding drop shadow
 		DropShadow dropShadow = new DropShadow();
 		dropShadow.setBlurType(BlurType.GAUSSIAN);
 		dropShadow.setRadius(5);
-
+		//Dollar Sign style
 		Text dollar = new Text("$");
 		dollar.setFill(Color.web("#ffc400"));
-		dollar.setStyle("-fx-font-size: 20;" +
-				"-fx-font: bold;");
-		// Textfield for bet
+		dollar.setFont(Font.font("Algerian", FontWeight.EXTRA_BOLD, 25));
+		// Textfield to enter the bet
 		betMoney = new TextField();
 		betMoney.setPromptText("Enter your bid here!");
-
+		//Disable the selection buttons
 		betMoney.setDisable(true);
 		dollar.setTextAlignment(TextAlignment.CENTER);
 		HBox betRow = new HBox(dollar, betMoney);
@@ -189,21 +193,21 @@ public class BaccaratGame extends Application {
 		betRow.setAlignment(Pos.CENTER);
 
 		toggleGrp = new ToggleGroup();
-		// Select Banker
+		// Select Banker and its styles
 		BankerButt = new ToggleButton("Bet Banker");
 		BankerButt.setPrefSize(100, 20);
 		BankerButt.setToggleGroup(toggleGrp);
 		BankerButt.setId("Banker");
 		BankerButt.setEffect(dropShadow);
 		BankerButt.setStyle("-fx-background-radius:15em; -fx-background-color:#ffc400;");
-		// Select Player
+		// Select Player and its styles
 		PlayerButt = new ToggleButton("Bet Player");
 		PlayerButt.setPrefSize(100, 20);
 		PlayerButt.setToggleGroup(toggleGrp);
 		PlayerButt.setId("Player");
 		PlayerButt.setEffect(dropShadow);
 		PlayerButt.setStyle("-fx-background-radius:15em; -fx-background-color:#ffc400;");
-		// Select Tie
+		// Select Tie and its styles
 		TieButt = new ToggleButton("Bet Draw");
 		TieButt.setPrefSize(100, 20);
 		TieButt.setToggleGroup(toggleGrp);
@@ -213,7 +217,7 @@ public class BaccaratGame extends Application {
 		betChoices = new HBox(8.5, BankerButt, PlayerButt, TieButt);
 		betChoices.setDisable(true);
 
-		//force the textfield to be Numeric, EX: 1234.56
+		//force the textfield to be Numeric, EX: 1234.56 and user unable to input over 7 digits
 		betMoney.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -240,7 +244,7 @@ public class BaccaratGame extends Application {
 			btn.setStyle("-fx-background-radius:15em; -fx-background-color: #ffc400;");
 			choice = btn.getId();
 		};
-
+		//Click button with mouse
 		BankerButt.setOnMousePressed(btnPressedHandler);
 		BankerButt.setOnMouseReleased(btnReleasedHandler);
 
@@ -268,7 +272,9 @@ public class BaccaratGame extends Application {
 		startHBox.setAlignment(Pos.CENTER_RIGHT);
 
 		playBtn = new Button("PLAY");
-		playBtn.setStyle("-fx-font-size: 40px;");
+		playBtn.setStyle("-fx-font-size: 40px;" +
+				"-fx-background-radius: 15,15,15,15;" +
+				"-fx-font-family: Rockwell Extra Bold;");
 		playBtn.setPrefSize(296.7, 75);
 		playBtn.setOnAction(e -> {
 			betMoney.setDisable(false);
