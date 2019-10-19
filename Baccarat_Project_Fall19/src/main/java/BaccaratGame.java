@@ -226,13 +226,14 @@ public class BaccaratGame extends Application {
 			}
 		});
 
-		//After Player, Banker, or Tie butt are pressed
+		//After Player, Banker, or Tie btn are pressed
 		EventHandler<MouseEvent> btnPressedHandler = e -> {
 			ToggleButton btn = (ToggleButton) e.getSource();
 			btn.setStyle("-fx-background-radius:15em; -fx-background-color: #ff9100;");
 			choice = btn.getId();
 		};
 
+		// Handler for after Player, Banker, or Tie btn are released
 		EventHandler<MouseEvent> btnReleasedHandler = e -> {
 			ToggleButton btn = (ToggleButton) e.getSource();
 			btn.setStyle("-fx-background-radius:15em; -fx-background-color: #ffc400;");
@@ -259,20 +260,21 @@ public class BaccaratGame extends Application {
 				gamePlay();
 			}
 		});
+		// StartBtn styles
 		startBtn.setEffect(dropShadow);
 		startBtn.setStyle("-fx-background-radius:15em;");
 		startBtn.setDisable(true);
 		HBox startHBox = new HBox(startBtn);
 		startHBox.setAlignment(Pos.CENTER_RIGHT);
 
+		// Button to enable inputs from users and reset images and result for a new round
 		playBtn = new Button("PLAY");
-		playBtn.setStyle("-fx-font-size: 40px;");
-		playBtn.setPrefSize(296.7, 75);
 		playBtn.setOnAction(e -> {
 			betMoney.setDisable(false);
 			betChoices.setDisable(false);
 			startBtn.setDisable(false);
 			playBtn.setDisable(true);
+			result.clear();
 			playerCard1.setImage(null);
 			playerCard2.setImage(null);
 			playerCard3.setImage(null);
@@ -280,13 +282,18 @@ public class BaccaratGame extends Application {
 			bankerCard2.setImage(null);
 			bankerCard3.setImage(null);
 		});
+		// PlayBtn styles
 		playBtn.setEffect(dropShadow);
+		playBtn.setStyle("-fx-font-size: 40px;");
+		playBtn.setPrefSize(296.7, 75);
 		HBox playHBox = new HBox(playBtn);
 		playHBox.setAlignment(Pos.BOTTOM_CENTER);
 
-        result.setEditable(false);
+        result.setEditable(false); // set result textbox to be uneditable
 
+		// VBox that contains all of the child nodes in the left sidebar
         VBox selection = new VBox(10, logo, betRow, betChoices, startHBox, result, playHBox);
+        // VBox styles
 		selection.setMaxWidth(316.7);
 		selection.setStyle("-fx-background-color: #d32f2f;");
 		DropShadow vBoxDS = new DropShadow();
@@ -300,11 +307,13 @@ public class BaccaratGame extends Application {
 		return selection;
 	}
 
+	/*
+		initRightGrid returns a gridPane for the main area of the game
+	 */
 	private GridPane initRightGrid() {
 		GridPane board = new GridPane();
-		/*
-		Labels Player and Banker, Changes color of each letter and fonts
-		 */
+
+		// Labels Player and Banker, Changes color of each letter and fonts
         Text playerTextP = new Text("P");
         playerTextP.setFill(Color.web("#ffc400"));
         Text playerTextL = new Text("L");
@@ -339,11 +348,10 @@ public class BaccaratGame extends Application {
         VBox bankerText = new VBox(bankerTextB,bankerTextA,bankerTextN,bankerTextK,bankerTextE,bankerTextR);
         bankerText.setStyle("-fx-font-family: Algerian;" +
                 "-fx-font-size: 35;");
-        //bankerText.set
         bankerText.setPadding(new Insets(0,10,0,0));
-		//board.setGridLinesVisible(true);
 		board.setAlignment(Pos.CENTER);
 
+		// initializes imageViews to hold the images of the banker's cards
         bankerCard1 = new ImageView();
         bankerCard1.setPreserveRatio(true);
 		bankerCard1.setFitHeight(250);
@@ -357,6 +365,7 @@ public class BaccaratGame extends Application {
 		bankerPos.setMargin(bankerCard1, new Insets(0,10,0,0));
 		bankerPos.setMargin(bankerCard2, new Insets(0,10,0,0));
 
+		// initializes imageViews to hold the images of the player's cards
         playerCard1 = new ImageView();
 		playerCard1.setPreserveRatio(true);
 		playerCard1.setFitHeight(250);
@@ -369,6 +378,7 @@ public class BaccaratGame extends Application {
 		playerPos.setMargin(playerCard1, new Insets(0,10,0,0));
 		playerPos.setMargin(playerCard2, new Insets(0,10,0,0));
 
+		// initialize HBox that contains all of the child nodes in the main area of the game
 		playerPos = new HBox(playerText, playerCard1, playerCard2, playerCard3);
 		board.add(bankerPos, 0,2);
 		board.add(playerPos, 0,10);
@@ -377,73 +387,92 @@ public class BaccaratGame extends Application {
 		return board;
 	}
 
+	/*
+	 * gamePlay runs the game with the game logic and deals with the transitions of the cards' images
+	 */
 	private void gamePlay() {
-        frshStart.setDisable(true);
-        SequentialTransition sT;
+        frshStart.setDisable(true); // disable fresh start button
+        SequentialTransition sT; // sequential transition to play pauseTransitions sequentially
+		// pauseTransitions for displaying the cards
 		PauseTransition pause1 = new PauseTransition(Duration.seconds(2));
 		PauseTransition pause2 = new PauseTransition(Duration.seconds(2));
 		PauseTransition pause3 = new PauseTransition(Duration.seconds(2));
 		PauseTransition pause4 = new PauseTransition(Duration.seconds(2));
 		PauseTransition pause5 = new PauseTransition(Duration.seconds(0));
-		PauseTransition pause6 = new PauseTransition(Duration.seconds(2));
+		PauseTransition pause6 = new PauseTransition(Duration.seconds(0));
+		PauseTransition pause7 = new PauseTransition(Duration.seconds(2));
 
 		theDealer.shuffleDeck();
 		playerHand = theDealer.dealHand();
 		bankerHand = theDealer.dealHand();
 
+		// display player card1
 		pause1.setOnFinished(e -> {
 			playerCard1.setImage(retrieveCard(playerHand.get(0)));
 		});
 
+		// display player card2
 		pause2.setOnFinished(e -> {
 			playerCard2.setImage(retrieveCard(playerHand.get(1)));
 		});
 
+		// display banker card1
 		pause3.setOnFinished(e -> {
 			bankerCard1.setImage(retrieveCard(bankerHand.get(0)));
 		});
+
+		// display banker card2
 		pause4.setOnFinished(e -> {
 			bankerCard2.setImage(retrieveCard(bankerHand.get(1)));
 		});
 
 		Card player3rdC = null;
-		if (gameLogic.whoWon(playerHand, bankerHand).equals("None")) {
-			pause5.setDuration(Duration.seconds(2));
+		if (gameLogic.whoWon(playerHand, bankerHand).equals("Draw")) { // check for natural win
 			if (gameLogic.evaluatePlayerDraw(playerHand)) {
-				player3rdC = theDealer.drawOne();
+				pause5.setDuration(Duration.seconds(2));
+				player3rdC = theDealer.drawOne(); // player draw one card
 				playerHand.add(player3rdC);
+				// display player card3
 				pause5.setOnFinished(e -> {
 					playerCard3.setImage(retrieveCard(playerHand.get(2)));
 				});
 			}
 			if (gameLogic.evaluateBankerDraw(bankerHand, player3rdC)) {
-				bankerHand.add(theDealer.drawOne());
-				pause5.setOnFinished(e -> {
+				pause6.setDuration(Duration.seconds(2));
+				bankerHand.add(theDealer.drawOne()); // banker draw one card
+				// display player card3
+				pause6.setOnFinished(e -> {
 					bankerCard3.setImage(retrieveCard(bankerHand.get(2)));
 				});
-				pause5.play();
 			}
 		}
-		pause6.setOnFinished(e -> {
+
+		// slight pause before game ends
+		pause7.setOnFinished(e -> {
 			gameEnd();
 		});
-		sT = new SequentialTransition(pause1,pause3,pause2,pause4,pause5,pause6);
+		sT = new SequentialTransition(pause1,pause3,pause2,pause4,pause5,pause6, pause7); // play transitions
 		sT.play();
 	}
 
-	// gameEnd contains the logic for the end of the game
-	private void gameEnd() { // text representation of end results, prefer a popup window
+	/*
+	 * gameEnd contains the logic for the end of the game
+	 */
+	private void gameEnd() {
 		String winner = gameLogic.whoWon(playerHand, bankerHand);
 		result.setText(gameEndMsg(winner));
-		if (winner.equals(choice))
+		if (winner.equals(choice)) // determine if the user wins
 			playerWin = true;
 		else
 			playerWin = false;
-		currWinnings.setText(Double.toString(evaluateWinnings()));
-		playBtn.setDisable(false);
-        frshStart.setDisable(false);
+		currWinnings.setText(Double.toString(evaluateWinnings())); // displays resulted total winnings
+		playBtn.setDisable(false); // enable replay
+        frshStart.setDisable(false); // enable fresh start
 	}
 
+	/*
+	* gameEndMsg returns the text representation of end results
+	*/
 	private String gameEndMsg(String winner) {
 		String playerMsg = "Player Total: " + gameLogic.handTotal(playerHand);
 		String bankerMsg = " Banker Total: " + gameLogic.handTotal(bankerHand) + "\n";
@@ -457,6 +486,10 @@ public class BaccaratGame extends Application {
 		return playerMsg + bankerMsg + winnerMsg + msg;
 	}
 
+	/*
+	 * retrieveCard takes the given card and returns an Image object
+	 * that stores the img corresponding to the card
+	 */
 	private Image retrieveCard(Card c) {
 		String suit = c.getSuite();
 		int val = c.getValue();

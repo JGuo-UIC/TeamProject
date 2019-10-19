@@ -12,7 +12,7 @@ public class BaccaratGameLogic{
                 return "Player";
             else if (bankerTotal >= 8 && playerTotal < 8)
                 return "Banker";
-            return "None";
+            return "Draw";
         }
 
         if (playerTotal > bankerTotal)
