@@ -33,17 +33,17 @@ public class BaccaratGame extends Application {
 	ArrayList<Card> playerHand;
 	ArrayList<Card> bankerHand;
 
-	BaccaratDealer theDealer = new BaccaratDealer();
-	BaccaratGameLogic gameLogic = new BaccaratGameLogic();
+	BaccaratDealer theDealer;
+	BaccaratGameLogic gameLogic;
 
-	String choice = "";
+	String choice;
 	double currentBet;
 	double totalWinnings;
 	boolean playerWin;
 
-	MenuBar menuBar = new MenuBar();
+	MenuBar menuBar;
     MenuItem frshStart;
-    HashMap<String, Scene> sceneMap = new HashMap<String, Scene>();
+    HashMap<String, Scene> sceneMap;
 
 	// Left VBox
 	TextField betMoney;
@@ -52,7 +52,7 @@ public class BaccaratGame extends Application {
 	ToggleGroup toggleGrp;
 	HBox betChoices;
 	Button playBtn;
-	TextArea result = new TextArea();
+	TextArea result;
 	TextField currWinnings;
 
 	// Right VBox
@@ -94,8 +94,15 @@ public class BaccaratGame extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
 		primaryStage.setTitle("Let's Play Baccarat!!!");
+
+		// initialize the necessary attributes for the game
+		theDealer = new BaccaratDealer();
+		gameLogic = new BaccaratGameLogic();
+		sceneMap = new HashMap<String, Scene>();
+		menuBar = new MenuBar();
+		result = new TextArea();
+		choice = "";
 		initMenu(primaryStage);
 		startGame(primaryStage);
 	}
@@ -392,7 +399,7 @@ public class BaccaratGame extends Application {
 		PauseTransition pause4 = new PauseTransition(Duration.seconds(2));
 		PauseTransition pause5 = new PauseTransition(Duration.seconds(0));
 		PauseTransition pause6 = new PauseTransition(Duration.seconds(0));
-		PauseTransition pause7 = new PauseTransition(Duration.seconds(2));
+		PauseTransition pause7 = new PauseTransition(Duration.seconds(3));
 
 		theDealer.shuffleDeck();
 		playerHand = theDealer.dealHand();
@@ -421,7 +428,7 @@ public class BaccaratGame extends Application {
 		Card player3rdC = null;
 		if (gameLogic.whoWon(playerHand, bankerHand).equals("Draw")) { // check for natural win
 			if (gameLogic.evaluatePlayerDraw(playerHand)) {
-				pause5.setDuration(Duration.seconds(2));
+				pause5.setDuration(Duration.seconds(3));
 				player3rdC = theDealer.drawOne(); // player draw one card
 				playerHand.add(player3rdC);
 				// display player card3
@@ -430,7 +437,7 @@ public class BaccaratGame extends Application {
 				});
 			}
 			if (gameLogic.evaluateBankerDraw(bankerHand, player3rdC)) {
-				pause6.setDuration(Duration.seconds(2));
+				pause6.setDuration(Duration.seconds(3));
 				bankerHand.add(theDealer.drawOne()); // banker draw one card
 				// display player card3
 				pause6.setOnFinished(e -> {
