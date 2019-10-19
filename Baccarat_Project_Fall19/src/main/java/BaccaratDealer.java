@@ -5,7 +5,7 @@ import java.util.Collections;
  * BaccaratDealer keeps track of a deck of cards and deals for the game
  */
 public class BaccaratDealer {
-    private ArrayList<Card> deck;
+    public ArrayList<Card> deck;
 
     BaccaratDealer() { // constructor that initiates the arraylist for a deck of card
         deck = new ArrayList<Card>();
