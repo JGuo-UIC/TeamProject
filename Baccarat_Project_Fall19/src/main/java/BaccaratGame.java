@@ -196,21 +196,30 @@ public class BaccaratGame extends Application {
 		BankerButt.setToggleGroup(toggleGrp);
 		BankerButt.setId("Banker");
 		BankerButt.setEffect(dropShadow);
-		BankerButt.setStyle("-fx-background-radius:15em; -fx-background-color:#ffc400;");
+		BankerButt.setStyle("-fx-background-radius:15em;" +
+				"-fx-font-size: 15px;" +
+				"-fx-font-family: Assistant;" +
+				"-fx-background-color:#ffc400;");
 		// Select Player and stylings
 		PlayerButt = new ToggleButton("Bet Player");
 		PlayerButt.setPrefSize(100, 20);
 		PlayerButt.setToggleGroup(toggleGrp);
 		PlayerButt.setId("Player");
 		PlayerButt.setEffect(dropShadow);
-		PlayerButt.setStyle("-fx-background-radius:15em; -fx-background-color:#ffc400;");
+		PlayerButt.setStyle("-fx-background-radius:15em;" +
+				"-fx-font-size: 15px;" +
+				"-fx-font-family: Assistant;" +
+				"-fx-background-color:#ffc400;");
 		// Select Tie and stylings
 		TieButt = new ToggleButton("Bet Draw");
 		TieButt.setPrefSize(100, 20);
 		TieButt.setToggleGroup(toggleGrp);
 		TieButt.setId("Draw");
 		TieButt.setEffect(dropShadow);
-		TieButt.setStyle("-fx-background-radius:15em; -fx-background-color:#ffc400;");
+		TieButt.setStyle("-fx-background-radius:15em;" +
+				"-fx-font-size: 15px;" +
+				"-fx-font-family: Assistant;" +
+				"-fx-background-color:#ffc400;");
 		betChoices = new HBox(8.5, BankerButt, PlayerButt, TieButt);
 		betChoices.setDisable(true);
 
@@ -266,7 +275,9 @@ public class BaccaratGame extends Application {
 		startBtn.setStyle("-fx-background-radius:15em;");
 		startBtn.setDisable(true);
 		HBox startHBox = new HBox(startBtn);
-		startHBox.setAlignment(Pos.CENTER_RIGHT);
+		startHBox.setStyle("-fx-font-size: 15px;" +
+				"-fx-font-family: Assistant;");
+		startHBox.setAlignment(Pos.CENTER);
 
 		playBtn = new Button("PLAY");
 		playBtn.setStyle("-fx-font-size: 40px;" +
