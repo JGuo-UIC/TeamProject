@@ -44,6 +44,14 @@ class DealerTest {
 		assertEquals(2, card2.getValue(), "The hand contains unexpected card value");
 		assertEquals("Spades", card2.getSuite(), "The hand contains unexpected card suit");
 	}
+	@Test
+	void testDrawOne() {
+		dealer.generateDeck();
+		int i = dealer.deckSize();
+		dealer.drawOne();
+		int j = dealer.deckSize();
+		assertEquals(51, j, "Card was not removed from deck");
+	}
 
 	@Test
 	void testShuffle() {

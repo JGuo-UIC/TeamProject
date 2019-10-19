@@ -80,11 +80,11 @@ public class BaccaratGame extends Application {
 		double resultWinnings = 0.0;
 		if (playerWin) {
 			if (choice.equals("Player"))
-				resultWinnings = totalWinnings + currentBet * 2;
+				resultWinnings = totalWinnings + currentBet * 2; //double user bet money when bet on player
 			else if (choice.equals("Banker"))
-				resultWinnings = totalWinnings + currentBet * 1.95;
+				resultWinnings = totalWinnings + currentBet * 1.95; //double user bet money and take 5% when bet on banker
 			else
-				resultWinnings = totalWinnings + currentBet * 8;
+				resultWinnings = totalWinnings + currentBet * 8; //8:1 user bet money when bet on tie
 			if (totalWinnings > resultWinnings) // deals with overflow
 			    resultWinnings = Double.MAX_VALUE;
 		} else {
