@@ -175,7 +175,9 @@ public class BaccaratGame extends Application {
 		dropShadow.setRadius(5);
 
 		Text dollar = new Text("$");
-		dollar.setStyle("-fx-font-size: 20;");
+		dollar.setFill(Color.web("#ffc400"));
+		dollar.setStyle("-fx-font-size: 20;" +
+				"-fx-font: bold;");
 		// Textfield for bet
 		betMoney = new TextField();
 		betMoney.setPromptText("Enter your bid here!");
@@ -217,11 +219,11 @@ public class BaccaratGame extends Application {
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				if (!newValue.matches("\\d*([\\.]\\d{0,2})?")) {
 					betMoney.setText(newValue.replaceAll("\\D", ""));
-					final int maxLength = 7;
-					if (betMoney.getText().length() > maxLength) {
-						String s = betMoney.getText().substring(0, maxLength);
-						betMoney.setText(s);
-					}
+				}
+				final int maxLength = 7;
+				if (betMoney.getText().length() > maxLength) {
+					String s = betMoney.getText().substring(0, maxLength);
+					betMoney.setText(s);
 				}
 			}
 		});
