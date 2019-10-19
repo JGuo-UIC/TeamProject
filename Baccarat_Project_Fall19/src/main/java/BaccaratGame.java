@@ -102,6 +102,8 @@ public class BaccaratGame extends Application {
 		result = new TextArea();
 		menuBar = new MenuBar();
 		choice = "";
+		primaryStage.setMinHeight(775);
+		primaryStage.setMinWidth(975);
 		initMenu(primaryStage);
 		startGame(primaryStage);
 	}
