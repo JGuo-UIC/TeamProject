@@ -121,6 +121,7 @@ public class BaccaratGame extends Application {
 
 	// initMenu initializes a menu with two menu items: freshstart and exit, and add into menuBar
 	public void initMenu(Stage primaryStage) {
+		//creates the menu bar
 		Menu mainMenu = new Menu();
 		mainMenu.setText("Options");
 		frshStart = new MenuItem();
@@ -131,7 +132,7 @@ public class BaccaratGame extends Application {
 			// Reset game
 			startGame(primaryStage);
 		});
-
+		//exit the game
 		exitItm.setText("Exit");
 		exitItm.setOnAction(e -> {
 			Platform.exit();
@@ -144,11 +145,11 @@ public class BaccaratGame extends Application {
 	public Scene mainScene() {
 		BorderPane pane = new BorderPane();
 		pane.setTop(menuBar);
-
+		//Display the winnings on top of the cards
 		VBox selection = initLeftVBox();
 		GridPane game = initRightGrid();
 		Text displayWinnings = new Text("Total Winnings: $");
-
+		//Stylings for the "displayWinngs"
 		displayWinnings.setFont(Font.font("Algerian", FontWeight.EXTRA_BOLD, 30));
 		displayWinnings.setFill(Color.web("#ffc400"));
 		currWinnings = new TextField();
@@ -166,22 +167,22 @@ public class BaccaratGame extends Application {
 	}
 
 	private VBox initLeftVBox() {
+		//Baccarat Game Title
 		ImageView logo = new ImageView(new Image("logo.png"));
 		logo.setFitWidth(255);
 		logo.setPreserveRatio(true);
-
+		//Set Styling for drop shadow
 		DropShadow dropShadow = new DropShadow();
 		dropShadow.setBlurType(BlurType.GAUSSIAN);
 		dropShadow.setRadius(5);
 
 		Text dollar = new Text("$");
 		dollar.setFill(Color.web("#ffc400"));
-		dollar.setStyle("-fx-font-size: 20;" +
-				"-fx-font: bold;");
+		dollar.setFont(Font.font("Algerian", FontWeight.EXTRA_BOLD, 25));
 		// Textfield for bet
 		betMoney = new TextField();
 		betMoney.setPromptText("Enter your bid here!");
-
+		//Disable the selection buttons
 		betMoney.setDisable(true);
 		dollar.setTextAlignment(TextAlignment.CENTER);
 		HBox betRow = new HBox(dollar, betMoney);
@@ -189,21 +190,21 @@ public class BaccaratGame extends Application {
 		betRow.setAlignment(Pos.CENTER);
 
 		toggleGrp = new ToggleGroup();
-		// Select Banker
+		// Select Banker and stylings
 		BankerButt = new ToggleButton("Bet Banker");
 		BankerButt.setPrefSize(100, 20);
 		BankerButt.setToggleGroup(toggleGrp);
 		BankerButt.setId("Banker");
 		BankerButt.setEffect(dropShadow);
 		BankerButt.setStyle("-fx-background-radius:15em; -fx-background-color:#ffc400;");
-		// Select Player
+		// Select Player and stylings
 		PlayerButt = new ToggleButton("Bet Player");
 		PlayerButt.setPrefSize(100, 20);
 		PlayerButt.setToggleGroup(toggleGrp);
 		PlayerButt.setId("Player");
 		PlayerButt.setEffect(dropShadow);
 		PlayerButt.setStyle("-fx-background-radius:15em; -fx-background-color:#ffc400;");
-		// Select Tie
+		// Select Tie and stylings
 		TieButt = new ToggleButton("Bet Draw");
 		TieButt.setPrefSize(100, 20);
 		TieButt.setToggleGroup(toggleGrp);
@@ -213,7 +214,7 @@ public class BaccaratGame extends Application {
 		betChoices = new HBox(8.5, BankerButt, PlayerButt, TieButt);
 		betChoices.setDisable(true);
 
-		//force the textfield to be Numeric, EX: 1234.56
+		//force the textfield to be Numeric, EX: 1234.56 and set a limit to 7
 		betMoney.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -240,7 +241,7 @@ public class BaccaratGame extends Application {
 			btn.setStyle("-fx-background-radius:15em; -fx-background-color: #ffc400;");
 			choice = btn.getId();
 		};
-
+		//Button only pressable by mouse
 		BankerButt.setOnMousePressed(btnPressedHandler);
 		BankerButt.setOnMouseReleased(btnReleasedHandler);
 
@@ -268,7 +269,10 @@ public class BaccaratGame extends Application {
 		startHBox.setAlignment(Pos.CENTER_RIGHT);
 
 		playBtn = new Button("PLAY");
-		playBtn.setStyle("-fx-font-size: 40px;");
+		playBtn.setStyle("-fx-font-size: 40px;" +
+				"-fx-background-radius: 15,15,15,15;" +
+				"-fx-font-family: Rockwell Extra Bold;" +
+				"-fx-font-weight: bold;");
 		playBtn.setPrefSize(296.7, 75);
 		playBtn.setOnAction(e -> {
 			betMoney.setDisable(false);
